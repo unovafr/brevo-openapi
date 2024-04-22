@@ -102,16 +102,45 @@ module Brevo
     attr_accessor :client_side_validation
 
     ### TLS/SSL setting
-    # You can use this to customize SSL Context settings (see https://ruby-doc.org/stdlib-2.5.1/libdoc/openssl/rdoc/OpenSSL/SSL/SSLContext.html
-    # to know which ones).
+    # Set this to false to skip verifying SSL certificate when calling API from https server.
+    # Default to true.
     #
-    # @return [Hash{Symbol => Object}, OpenSSL::SSL::SSLContext, nil]
-    attr_accessor :ssl
+    # @note Do NOT set it to false in production code, otherwise you would face multiple types of cryptographic attacks.
+    #
+    # @return [true, false]
+    attr_accessor :ssl_verify
+
+    ### TLS/SSL setting
+    # Any `OpenSSL::SSL::` constant (see https://ruby-doc.org/stdlib-2.5.1/libdoc/openssl/rdoc/OpenSSL/SSL.html)
+    #
+    # @note Do NOT set it to false in production code, otherwise you would face multiple types of cryptographic attacks.
+    #
+    attr_accessor :ssl_verify_mode
+
+    ### TLS/SSL setting
+    # Set this to customize the certificate file to verify the peer.
+    #
+    # @return [String] the path to the certificate file
+    attr_accessor :ssl_ca_file
+
+    ### TLS/SSL setting
+    # Client certificate file (for client certificate)
+    attr_accessor :ssl_client_cert
+
+    ### TLS/SSL setting
+    # Client private key file (for client certificate)
+    attr_accessor :ssl_client_key
 
     ### Proxy setting
-    # HTTP Proxy settings (see https://honeyryderchuck.gitlab.io/httpx/wiki/Proxy#options)
-    # @return [Hash{Symbol => Object}, nil]
+    # HTTP Proxy settings
     attr_accessor :proxy
+
+    # Set this to customize parameters encoder of array parameter.
+    # Default to nil. Faraday uses NestedParamsEncoder when nil.
+    #
+    # @see The params_encoder option of Faraday. Related source code:
+    # https://github.com/lostisland/faraday/tree/main/lib/faraday/encoders
+    attr_accessor :params_encoder
 
 
     attr_accessor :inject_format
@@ -129,10 +158,17 @@ module Brevo
       @api_key = {}
       @api_key_prefix = {}
       @client_side_validation = true
-      @ssl = nil
-      @proxy = nil
+      @ssl_verify = true
+      @ssl_verify_mode = nil
+      @ssl_ca_file = nil
+      @ssl_client_cert = nil
+      @ssl_client_key = nil
+      @middlewares = Hash.new { |h, k| h[k] = [] }
+      @configure_connection_blocks = []
       @timeout = 60
-      @configure_session_blocks = []
+      # return data as binary instead of file
+      @return_binary_data = false
+      @params_encoder = nil
       @debugging = false
       @inject_format = false
       @force_ending_format = false
@@ -261,25 +297,86 @@ module Brevo
       url
     end
 
-
-    # Configure Httpx session directly.
+    # Configure Faraday connection directly.
     #
     # ```
-    # c.configure_session do |http|
-    #   http.plugin(:follow_redirects).with(debug: STDOUT, debug_level: 1)
+    # c.configure_faraday_connection do |conn|
+    #   conn.use Faraday::HttpCache, shared_cache: false, logger: logger
+    #   conn.response :logger, nil, headers: true, bodies: true, log_level: :debug do |logger|
+    #     logger.filter(/(Authorization: )(.*)/, '\1[REDACTED]')
+    #   end
+    # end
+    #
+    # c.configure_faraday_connection do |conn|
+    #   conn.adapter :typhoeus
     # end
     # ```
     #
     # @param block [Proc] `#call`able object that takes one arg, the connection
-    def configure_session(&block)
-      @configure_session_blocks << block
+    def configure_faraday_connection(&block)
+      @configure_connection_blocks << block
     end
 
-
-    def configure(session)
-      @configure_session_blocks.reduce(session) do |configured_sess, block|
-        block.call(configured_sess)
+    def configure_connection(conn)
+      @configure_connection_blocks.each do |block|
+        block.call(conn)
       end
     end
+
+    # Adds middleware to the stack
+    def use(*middleware)
+      set_faraday_middleware(:use, *middleware)
+    end
+
+    # Adds request middleware to the stack
+    def request(*middleware)
+      set_faraday_middleware(:request, *middleware)
+    end
+
+    # Adds response middleware to the stack
+    def response(*middleware)
+      set_faraday_middleware(:response, *middleware)
+    end
+
+    # Adds Faraday middleware setting information to the stack
+    #
+    # @example Use the `set_faraday_middleware` method to set middleware information
+    #   config.set_faraday_middleware(:request, :retry, max: 3, methods: [:get, :post], retry_statuses: [503])
+    #   config.set_faraday_middleware(:response, :logger, nil, { bodies: true, log_level: :debug })
+    #   config.set_faraday_middleware(:use, Faraday::HttpCache, store: Rails.cache, shared_cache: false)
+    #   config.set_faraday_middleware(:insert, 0, FaradayMiddleware::FollowRedirects, { standards_compliant: true, limit: 1 })
+    #   config.set_faraday_middleware(:swap, 0, Faraday::Response::Logger)
+    #   config.set_faraday_middleware(:delete, Faraday::Multipart::Middleware)
+    #
+    # @see https://github.com/lostisland/faraday/blob/v2.3.0/lib/faraday/rack_builder.rb#L92-L143
+    def set_faraday_middleware(operation, key, *args, &block)
+      unless [:request, :response, :use, :insert, :insert_before, :insert_after, :swap, :delete].include?(operation)
+        fail ArgumentError, "Invalid faraday middleware operation #{operation}. Must be" \
+                            " :request, :response, :use, :insert, :insert_before, :insert_after, :swap or :delete."
+      end
+
+      @middlewares[operation] << [key, args, block]
+    end
+    ruby2_keywords(:set_faraday_middleware) if respond_to?(:ruby2_keywords, true)
+
+    # Set up middleware on the connection
+    def configure_middleware(connection)
+      return if @middlewares.empty?
+
+      [:request, :response, :use, :insert, :insert_before, :insert_after, :swap].each do |operation|
+        next unless @middlewares.key?(operation)
+
+        @middlewares[operation].each do |key, args, block|
+          connection.builder.send(operation, key, *args, &block)
+        end
+      end
+
+      if @middlewares.key?(:delete)
+        @middlewares[:delete].each do |key, _args, _block|
+          connection.builder.delete(key)
+        end
+      end
+    end
+
   end
 end

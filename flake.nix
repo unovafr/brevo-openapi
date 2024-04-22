@@ -11,9 +11,9 @@
       let
         pkgs = import nixpkgs { inherit system; };
 
-	tools = pkgs.writeScriptBin "generate" ''
-	  openapi-generator-cli generate -i https://api.brevo.com/v3/swagger_definition.yml -g ruby -o . "--additional-properties=gemName=brevo,library=httpx"
-	'';
+        tools = pkgs.writeScriptBin "generate" ''
+          openapi-generator-cli generate -i https://api.brevo.com/v3/swagger_definition.yml -g ruby -o . "--additional-properties=gemName=brevo,library=faraday"
+        '';
 
         packages = with pkgs; [ openapi-generator-cli tools ];
       in

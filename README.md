@@ -86,8 +86,8 @@ Brevo.configure do |config|
   config.api_key['api-key'] = 'YOUR API KEY'
   # Uncomment the following line to set a prefix for the API key, e.g. 'Bearer' (defaults to nil)
   # config.api_key_prefix['api-key'] = 'Bearer'
-  # Configure httpx session
-  config.configure_session { |session| 'YOUR CONNECTION CONFIG PROC' }
+  # Configure faraday connection
+  config.configure_faraday_connection { |connection| 'YOUR CONNECTION CONFIG PROC' }
 end
 
 api_instance = Brevo::AccountApi.new

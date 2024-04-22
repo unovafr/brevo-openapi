@@ -15,8 +15,9 @@ require 'json'
 require 'logger'
 require 'tempfile'
 require 'time'
-require 'httpx'
-require 'net/http/status'
+require 'faraday'
+require 'faraday/multipart' if Gem::Version.new(Faraday::VERSION) >= Gem::Version.new('2.0')
+require 'marcel'
 
 
 module Brevo
@@ -49,34 +50,43 @@ module Brevo
     # @return [Array<(Object, Integer, Hash)>] an array of 3 elements:
     #   the data deserialized from response body (could be nil), response status code and response headers.
     def call_api(http_method, path, opts = {})
+      stream = nil
       begin
-        response = build_request(http_method.to_s, path, opts)
+        response = connection(opts).public_send(http_method.to_sym.downcase) do |req|
+          request = build_request(http_method, path, req, opts)
+          stream = download_file(request) if opts[:return_type] == 'File' || opts[:return_type] == 'Binary'
+        end
 
         if config.debugging
           config.logger.debug "HTTP response body ~BEGIN~\n#{response.body}\n~END~\n"
         end
 
-        response.raise_for_status
-
-      rescue HTTPX::HTTPError
-          fail ApiError.new(code: response.status,
-                response_headers: response.headers.to_h,
-                response_body: response.body.to_s),
-                Net::HTTP::STATUS_CODES.fetch(response.status, "HTTP Error (#{response.status})")
-      rescue HTTPX::TimeoutError
+        unless response.success?
+          if response.status == 0 && response.respond_to?(:return_message)
+            # Errors from libcurl will be made visible here
+            fail ApiError.new(code: 0,
+                              message: response.return_message)
+          else
+            fail ApiError.new(code: response.status,
+                              response_headers: response.headers,
+                              response_body: response.body),
+                 response.reason_phrase
+          end
+        end
+      rescue Faraday::TimeoutError
         fail ApiError.new('Connection timed out')
-      rescue HTTPX::ConnectionError, HTTPX::ResolveError
+      rescue Faraday::ConnectionFailed
         fail ApiError.new('Connection failed')
       end
 
-      if opts[:return_type] == 'File'
-        data = deserialize_file(response)
+      if opts[:return_type] == 'File' || opts[:return_type] == 'Binary'
+        data = deserialize_file(response, stream)
       elsif opts[:return_type]
         data = deserialize(response, opts[:return_type])
       else
         data = nil
       end
-      return data, response.status, response.headers.to_h
+      return data, response.status, response.headers
     end
 
     # Builds the HTTP request
@@ -87,9 +97,10 @@ module Brevo
     # @option opts [Hash] :query_params Query parameters
     # @option opts [Hash] :form_params Query parameters
     # @option opts [Object] :body HTTP body (JSON/XML)
-    # @return [HTTPX::Request] A Request object
-    def build_request(http_method, path, opts = {})
+    # @return [Faraday::Request] A Faraday Request
+    def build_request(http_method, path, request, opts = {})
       url = build_request_url(path, opts)
+      http_method = http_method.to_sym.downcase
 
       header_params = @default_headers.merge(opts[:header_params] || {})
       query_params = opts[:query_params] || {}
@@ -97,18 +108,22 @@ module Brevo
 
       update_params_for_auth! header_params, query_params, opts[:auth_names]
 
-      if %w[POST PATCH PUT DELETE].include?(http_method)
-        body_params = build_request_body(header_params, form_params, opts[:body])
+      if [:post, :patch, :put, :delete].include?(http_method)
+        req_body = build_request_body(header_params, form_params, opts[:body])
         if config.debugging
           config.logger.debug "HTTP request body param ~BEGIN~\n#{req_body}\n~END~\n"
         end
       end
-      req_opts = {
-        :headers => HTTPX::Headers.new(header_params)
-      }
-      req_opts.merge!(body_params) if body_params
-      req_opts[:params] = query_params if query_params && !query_params.empty?
-      session.request(http_method, url, **req_opts)
+      request.headers = header_params
+      request.body = req_body
+
+      # Overload default options only if provided
+      request.options.params_encoder = config.params_encoder if config.params_encoder
+      request.options.timeout        = config.timeout        if config.timeout
+
+      request.url url
+      request.params = query_params
+      request
     end
 
     # Builds the HTTP request body
@@ -116,25 +131,51 @@ module Brevo
     # @param [Hash] header_params Header parameters
     # @param [Hash] form_params Query parameters
     # @param [Object] body HTTP body (JSON/XML)
-    # @return [Hash{Symbol => Object}] body options as HTTPX handles them
+    # @return [String] HTTP body data in the form of string
     def build_request_body(header_params, form_params, body)
       # http form
-      if header_params['Content-Type'] == 'application/x-www-form-urlencoded' ||
-         header_params['Content-Type'] == 'multipart/form-data'
-        header_params.delete('Content-Type') # httpx takes care of this
-        { form: form_params }
+      if header_params['Content-Type'] == 'application/x-www-form-urlencoded'
+        data = URI.encode_www_form(form_params)
+      elsif header_params['Content-Type'] == 'multipart/form-data'
+        data = {}
+        form_params.each do |key, value|
+          case value
+          when ::File, ::Tempfile
+            data[key] = Faraday::FilePart.new(value.path, Marcel::MimeType.for(Pathname.new(value.path)))
+          when ::Array, nil
+            # let Faraday handle Array and nil parameters
+            data[key] = value
+          else
+            data[key] = value.to_s
+          end
+        end
       elsif body
-        body.is_a?(String) ? { body: body } : { json: body }
+        data = body.is_a?(String) ? body : body.to_json
+      else
+        data = nil
       end
+      data
     end
 
-    def deserialize_file(response)
+    def download_file(request)
+      stream = []
+
+      # handle streaming Responses
+      request.options.on_data = Proc.new do |chunk, overall_received_bytes|
+        stream << chunk
+      end
+      stream
+    end
+
+    def deserialize_file(response, stream)
       body = response.body
       if @config.return_binary_data == true
-        # TODO: force response encoding
-        body.to_s
+        # return byte stream
+        encoding = body.encoding
+        stream.join.force_encoding(encoding)
       else
-        content_disposition = response.headers['content-disposition']
+        # return file instead of binary data
+        content_disposition = response.headers['Content-Disposition']
         if content_disposition && content_disposition =~ /filename=/i
           filename = content_disposition[/filename=['"]?([^'"\s]+)['"]?/, 1]
           prefix = sanitize_filename(filename)
@@ -142,41 +183,61 @@ module Brevo
           prefix = 'download-'
         end
         prefix = prefix + '-' unless prefix.end_with?('-')
-        encoding = response.body.encoding
+        encoding = body.encoding
         tempfile = Tempfile.open(prefix, @config.temp_folder_path, encoding: encoding)
-        response.copy_to(tempfile)
+        tempfile.write(stream.join.force_encoding(encoding))
         tempfile.close
-        @config.logger.info "Temp file written to #{tempfile.path}, please copy the file to a proper folder "\
+        config.logger.info "Temp file written to #{tempfile.path}, please copy the file to a proper folder "\
                             "with e.g. `FileUtils.cp(tempfile.path, '/new/file/path')` otherwise the temp file "\
                             "will be deleted automatically with GC. It's also recommended to delete the temp file "\
                             "explicitly with `tempfile.delete`"
-
         tempfile
       end
     end
 
-    def session
-      return @session if defined?(@session)
+    def connection(opts)
+      opts[:header_params]['Content-Type'] == 'multipart/form-data' ? connection_multipart : connection_regular
+    end
 
-      session = HTTPX.with(
-        ssl: @config.ssl,
-        timeout: ({ request_timeout: @config.timeout } if @config.timeout && @config.timeout.positive?),
-        origin: "#{@config.scheme}://#{@config.host}",
-        base_path: (@config.base_path.sub(/\/+\z/, '') if @config.base_path)
-      )
-
-      if @config.proxy
-        session = session.plugin(:proxy, proxy: @config.proxy)
+    def connection_multipart
+      @connection_multipart ||= build_connection do |conn|
+        conn.request :multipart
+        conn.request :url_encoded
       end
+    end
 
-      if @config.username && @config.password
-        session = session.plugin(:basic_auth).basic_auth(@config.username, @config.password)
+    def connection_regular
+      @connection_regular ||= build_connection
+    end
+
+    def build_connection
+      Faraday.new(url: config.base_url, ssl: ssl_options, proxy: config.proxy) do |conn|
+        basic_auth(conn)
+        config.configure_middleware(conn)
+        yield(conn) if block_given?
+        conn.adapter(Faraday.default_adapter)
+        config.configure_connection(conn)
       end
+    end
 
-      session = @config.configure(session)
+    def ssl_options
+      {
+        ca_file: config.ssl_ca_file,
+        verify: config.ssl_verify,
+        verify_mode: config.ssl_verify_mode,
+        client_cert: config.ssl_client_cert,
+        client_key: config.ssl_client_key
+      }
+    end
 
-      @session = session
-
+    def basic_auth(conn)
+      if config.username && config.password
+        if Gem::Version.new(Faraday::VERSION) >= Gem::Version.new('2.0')
+          conn.request(:authorization, :basic, config.username, config.password)
+        else
+          conn.request(:basic_auth, config.username, config.password)
+        end
+      end
     end
 
     # Check if the given MIME is a JSON MIME.
