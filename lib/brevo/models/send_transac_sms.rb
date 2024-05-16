@@ -33,6 +33,9 @@ module Brevo
     # Webhook to call for each event triggered by the message (delivered etc.)
     attr_accessor :web_url
 
+    # Format of the message. It indicates whether the content should be treated as unicode or not.
+    attr_accessor :unicode_enabled
+
     # A recognizable prefix will ensure your audience knows who you are.**Mandatory for U.S. Carriers**.This will be added as your Brand Name before the message content and will be included in content,**Prefer to verify maximum length of 160 characters including this prefix to avoid multiple sending of same sms**.
     attr_accessor :organisation_prefix
 
@@ -67,6 +70,7 @@ module Brevo
         :'type' => :'type',
         :'tag' => :'tag',
         :'web_url' => :'webUrl',
+        :'unicode_enabled' => :'unicodeEnabled',
         :'organisation_prefix' => :'organisationPrefix'
       }
     end
@@ -85,6 +89,7 @@ module Brevo
         :'type' => :'String',
         :'tag' => :'String',
         :'web_url' => :'String',
+        :'unicode_enabled' => :'Boolean',
         :'organisation_prefix' => :'String'
       }
     end
@@ -140,6 +145,10 @@ module Brevo
 
       if attributes.key?(:'web_url')
         self.web_url = attributes[:'web_url']
+      end
+
+      if attributes.key?(:'unicode_enabled')
+        self.unicode_enabled = attributes[:'unicode_enabled']
       end
 
       if attributes.key?(:'organisation_prefix')
@@ -219,6 +228,7 @@ module Brevo
           type == o.type &&
           tag == o.tag &&
           web_url == o.web_url &&
+          unicode_enabled == o.unicode_enabled &&
           organisation_prefix == o.organisation_prefix
     end
 
@@ -231,7 +241,7 @@ module Brevo
     # Calculates hash code according to all attributes.
     # @return [Integer] Hash code
     def hash
-      [sender, recipient, content, type, tag, web_url, organisation_prefix].hash
+      [sender, recipient, content, type, tag, web_url, unicode_enabled, organisation_prefix].hash
     end
 
     # Builds the object from hash

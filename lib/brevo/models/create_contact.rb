@@ -18,6 +18,9 @@ module Brevo
     # Email address of the user. Mandatory if \"SMS\" field is not passed in \"attributes\" parameter. Mobile Number in \"SMS\" field should be passed with proper country code. For example {\"SMS\":\"+91xxxxxxxxxx\"} or {\"SMS\":\"0091xxxxxxxxxx\"}
     attr_accessor :email
 
+    # Pass your own Id to create a contact.
+    attr_accessor :ext_id
+
     # Pass the set of attributes and their values. These attributes must be present in your SendinBlue account. For eg. {\"FNAME\":\"Elly\", \"LNAME\":\"Roger\"}
     attr_accessor :attributes
 
@@ -40,6 +43,7 @@ module Brevo
     def self.attribute_map
       {
         :'email' => :'email',
+        :'ext_id' => :'ext_id',
         :'attributes' => :'attributes',
         :'email_blacklisted' => :'emailBlacklisted',
         :'sms_blacklisted' => :'smsBlacklisted',
@@ -58,6 +62,7 @@ module Brevo
     def self.openapi_types
       {
         :'email' => :'String',
+        :'ext_id' => :'String',
         :'attributes' => :'Object',
         :'email_blacklisted' => :'Boolean',
         :'sms_blacklisted' => :'Boolean',
@@ -90,6 +95,10 @@ module Brevo
 
       if attributes.key?(:'email')
         self.email = attributes[:'email']
+      end
+
+      if attributes.key?(:'ext_id')
+        self.ext_id = attributes[:'ext_id']
       end
 
       if attributes.key?(:'attributes')
@@ -144,6 +153,7 @@ module Brevo
       return true if self.equal?(o)
       self.class == o.class &&
           email == o.email &&
+          ext_id == o.ext_id &&
           attributes == o.attributes &&
           email_blacklisted == o.email_blacklisted &&
           sms_blacklisted == o.sms_blacklisted &&
@@ -161,7 +171,7 @@ module Brevo
     # Calculates hash code according to all attributes.
     # @return [Integer] Hash code
     def hash
-      [email, attributes, email_blacklisted, sms_blacklisted, list_ids, update_enabled, smtp_blacklist_sender].hash
+      [email, ext_id, attributes, email_blacklisted, sms_blacklisted, list_ids, update_enabled, smtp_blacklist_sender].hash
     end
 
     # Builds the object from hash

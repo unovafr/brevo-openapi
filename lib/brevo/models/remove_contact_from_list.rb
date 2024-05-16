@@ -18,6 +18,9 @@ module Brevo
     # Required if 'all' is false. Emails to remove from a list. You can pass a maximum of 150 emails for removal in one request.
     attr_accessor :emails
 
+    # Required if 'all' is false and 'emails' is empty. IDs to remove from a list. You can pass a maximum of 150 IDs for removal in one request.
+    attr_accessor :ids
+
     # Required if 'emails' is empty. Remove all existing contacts from a list. A process will be created in this scenario. You can fetch the process details to know about the progress
     attr_accessor :all
 
@@ -25,6 +28,7 @@ module Brevo
     def self.attribute_map
       {
         :'emails' => :'emails',
+        :'ids' => :'ids',
         :'all' => :'all'
       }
     end
@@ -38,6 +42,7 @@ module Brevo
     def self.openapi_types
       {
         :'emails' => :'Array<String>',
+        :'ids' => :'Array<Integer>',
         :'all' => :'Boolean'
       }
     end
@@ -69,6 +74,12 @@ module Brevo
         end
       end
 
+      if attributes.key?(:'ids')
+        if (value = attributes[:'ids']).is_a?(Array)
+          self.ids = value
+        end
+      end
+
       if attributes.key?(:'all')
         self.all = attributes[:'all']
       end
@@ -87,6 +98,14 @@ module Brevo
         invalid_properties.push('invalid value for "emails", number of items must be greater than or equal to 1.')
       end
 
+      if !@ids.nil? && @ids.length > 150
+        invalid_properties.push('invalid value for "ids", number of items must be less than or equal to 150.')
+      end
+
+      if !@ids.nil? && @ids.length < 1
+        invalid_properties.push('invalid value for "ids", number of items must be greater than or equal to 1.')
+      end
+
       invalid_properties
     end
 
@@ -96,6 +115,8 @@ module Brevo
       warn '[DEPRECATED] the `valid?` method is obsolete'
       return false if !@emails.nil? && @emails.length > 150
       return false if !@emails.nil? && @emails.length < 1
+      return false if !@ids.nil? && @ids.length > 150
+      return false if !@ids.nil? && @ids.length < 1
       true
     end
 
@@ -117,12 +138,31 @@ module Brevo
       @emails = emails
     end
 
+    # Custom attribute writer method with validation
+    # @param [Object] ids Value to be assigned
+    def ids=(ids)
+      if ids.nil?
+        fail ArgumentError, 'ids cannot be nil'
+      end
+
+      if ids.length > 150
+        fail ArgumentError, 'invalid value for "ids", number of items must be less than or equal to 150.'
+      end
+
+      if ids.length < 1
+        fail ArgumentError, 'invalid value for "ids", number of items must be greater than or equal to 1.'
+      end
+
+      @ids = ids
+    end
+
     # Checks equality by comparing each attribute.
     # @param [Object] Object to be compared
     def ==(o)
       return true if self.equal?(o)
       self.class == o.class &&
           emails == o.emails &&
+          ids == o.ids &&
           all == o.all
     end
 
@@ -135,7 +175,7 @@ module Brevo
     # Calculates hash code according to all attributes.
     # @return [Integer] Hash code
     def hash
-      [emails, all].hash
+      [emails, ids, all].hash
     end
 
     # Builds the object from hash
