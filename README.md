@@ -1,10 +1,3 @@
-# Note
-
-Unofficial client library for Brevo
-
-This project is just a ruby code generated from the official Brevo swagger openapi file.
-It has been generated with custom settings to workaround a bug related to a bad use of libcurl (malformed URL).
-
 # brevo
 
 Brevo - the Ruby gem for the SendinBlue API
@@ -448,3 +441,4 @@ Authentication schemes defined for the API:
 - **Type**: API key
 - **API key parameter name**: api-key
 - **Location**: HTTP header
+

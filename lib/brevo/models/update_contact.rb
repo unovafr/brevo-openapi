@@ -18,6 +18,9 @@ module Brevo
     # Pass the set of attributes to be updated. These attributes must be present in your account. To update existing email address of a contact with the new one please pass EMAIL in attribtes. For example, `{ \"EMAIL\":\"newemail@domain.com\", \"FNAME\":\"Ellie\", \"LNAME\":\"Roger\"}`. Keep in mind transactional attributes can be updated the same way as normal attributes. Mobile Number in \"SMS\" field should be passed with proper country code. For example {\"SMS\":\"+91xxxxxxxxxx\"} or {\"SMS\":\"0091xxxxxxxxxx\"}
     attr_accessor :attributes
 
+    # Pass your own Id to create a contact.
+    attr_accessor :ext_id
+
     # Set/unset this field to blacklist/allow the contact for emails (emailBlacklisted = true)
     attr_accessor :email_blacklisted
 
@@ -37,6 +40,7 @@ module Brevo
     def self.attribute_map
       {
         :'attributes' => :'attributes',
+        :'ext_id' => :'ext_id',
         :'email_blacklisted' => :'emailBlacklisted',
         :'sms_blacklisted' => :'smsBlacklisted',
         :'list_ids' => :'listIds',
@@ -54,6 +58,7 @@ module Brevo
     def self.openapi_types
       {
         :'attributes' => :'Object',
+        :'ext_id' => :'String',
         :'email_blacklisted' => :'Boolean',
         :'sms_blacklisted' => :'Boolean',
         :'list_ids' => :'Array<Integer>',
@@ -85,6 +90,10 @@ module Brevo
 
       if attributes.key?(:'attributes')
         self.attributes = attributes[:'attributes']
+      end
+
+      if attributes.key?(:'ext_id')
+        self.ext_id = attributes[:'ext_id']
       end
 
       if attributes.key?(:'email_blacklisted')
@@ -135,6 +144,7 @@ module Brevo
       return true if self.equal?(o)
       self.class == o.class &&
           attributes == o.attributes &&
+          ext_id == o.ext_id &&
           email_blacklisted == o.email_blacklisted &&
           sms_blacklisted == o.sms_blacklisted &&
           list_ids == o.list_ids &&
@@ -151,7 +161,7 @@ module Brevo
     # Calculates hash code according to all attributes.
     # @return [Integer] Hash code
     def hash
-      [attributes, email_blacklisted, sms_blacklisted, list_ids, unlink_list_ids, smtp_blacklist_sender].hash
+      [attributes, ext_id, email_blacklisted, sms_blacklisted, list_ids, unlink_list_ids, smtp_blacklist_sender].hash
     end
 
     # Builds the object from hash

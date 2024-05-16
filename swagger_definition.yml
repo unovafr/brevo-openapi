@@ -6166,6 +6166,15 @@ definitions:
           format: email
           description: Email to add to a list
           example: 'john.smith@contact.com'
+      ids:
+        description: "IDs to add to a list. You can pass a maximum of 150 IDs for addition in one request. If you need to add the emails in bulk, please prefer /contacts/import api."
+        type: array
+        minItems: 1
+        maxItems: 150
+        items:
+          type: integer
+          description: ID to add to a list
+          example: 1
 
   removeContactFromList:
     type: object
@@ -9170,6 +9179,10 @@ definitions:
         type: object
         description: Pass the set of attributes to be updated. These attributes must be present in your account. To update existing email address of a contact with the new one please pass EMAIL in attribtes. For example, `{ "EMAIL":"newemail@domain.com", "FNAME":"Ellie", "LNAME":"Roger"}`. Keep in mind transactional attributes can be updated the same way as normal attributes. Mobile Number in "SMS" field should be passed with proper country code. For example {"SMS":"+91xxxxxxxxxx"} or {"SMS":"0091xxxxxxxxxx"}
         example: {"EMAIL":"newemail@domain.com", "FNAME":"Ellie", "LNAME":"Roger"}
+      ext_id:
+        description: Pass your own Id to create a contact.
+        type: string
+        example: 'externalId'
       emailBlacklisted:
         description: Set/unset this field to blacklist/allow the contact for emails (emailBlacklisted = true)
         type: boolean
