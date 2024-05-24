@@ -5,7 +5,7 @@
 | Name | Type | Description | Notes |
 | ---- | ---- | ----------- | ----- |
 | **campaigns** | [**Array&lt;GetEmailCampaignsCampaignsInner&gt;**](GetEmailCampaignsCampaignsInner.md) |  | [optional] |
-| **count** | **Integer** | Number of Email campaigns retrieved |  |
+| **count** | **Integer** | Number of Email campaigns retrieved | [optional] |
 
 ## Example
 

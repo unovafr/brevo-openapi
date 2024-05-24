@@ -8,10 +8,10 @@
 | **name** | **String** | Name of the SMS Campaign |  |
 | **status** | **String** | Status of the SMS Campaign |  |
 | **content** | **String** | Content of the SMS Campaign |  |
-| **scheduled_at** | **Time** | UTC date-time on which SMS campaign is scheduled. Should be in YYYY-MM-DDTHH:mm:ss.SSSZ format |  |
+| **scheduled_at** | **String** | UTC date-time on which SMS campaign is scheduled. Should be in YYYY-MM-DDTHH:mm:ss.SSSZ format | [optional] |
 | **sender** | **String** | Sender of the SMS Campaign |  |
-| **created_at** | **Time** | Creation UTC date-time of the SMS campaign (YYYY-MM-DDTHH:mm:ss.SSSZ) |  |
-| **modified_at** | **Time** | UTC date-time of last modification of the SMS campaign (YYYY-MM-DDTHH:mm:ss.SSSZ) |  |
+| **created_at** | **String** | Creation UTC date-time of the SMS campaign (YYYY-MM-DDTHH:mm:ss.SSSZ) |  |
+| **modified_at** | **String** | UTC date-time of last modification of the SMS campaign (YYYY-MM-DDTHH:mm:ss.SSSZ) |  |
 
 ## Example
 
@@ -23,10 +23,10 @@ instance = Brevo::GetSmsCampaignOverview.new(
   name: PROMO CODE,
   status: draft,
   content: Visit our Store and get some discount !,
-  scheduled_at: 2017-06-01T12:30Z,
+  scheduled_at: 2017-06-01T12:30:00Z,
   sender: MyCompany,
-  created_at: 2017-06-01T12:30Z,
-  modified_at: 2017-05-01T12:30Z
+  created_at: 2017-06-01T12:30:00Z,
+  modified_at: 2017-05-01T12:30:00Z
 )
 ```
 

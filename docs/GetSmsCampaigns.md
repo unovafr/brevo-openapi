@@ -5,7 +5,7 @@
 | Name | Type | Description | Notes |
 | ---- | ---- | ----------- | ----- |
 | **campaigns** | [**Array&lt;GetSmsCampaignsCampaignsInner&gt;**](GetSmsCampaignsCampaignsInner.md) |  | [optional] |
-| **count** | **Integer** | Number of SMS campaigns retrieved |  |
+| **count** | **Integer** | Number of SMS campaigns retrieved | [optional] |
 
 ## Example
 

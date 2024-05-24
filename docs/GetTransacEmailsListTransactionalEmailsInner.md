@@ -9,7 +9,7 @@
 | **template_id** | **Integer** | Id of the template | [optional] |
 | **message_id** | **String** | Message Id of the sent email |  |
 | **uuid** | **String** | Unique id of the email sent to a particular contact |  |
-| **date** | **Time** | Date on which transactional email was sent |  |
+| **date** | **String** | Date on which transactional email was sent |  |
 | **from** | **String** | Email address of the sender from which the email was sent | [optional] |
 | **tags** | **Array&lt;String&gt;** | Tags used for your email | [optional] |
 
@@ -24,7 +24,7 @@ instance = Brevo::GetTransacEmailsListTransactionalEmailsInner.new(
   template_id: 2,
   message_id: &lt;201798300811.5700093@relay.domain.com&gt;,
   uuid: 5a78c-209ok98262910-s99a341,
-  date: 2017-03-12T12:30Z,
+  date: 2017-03-12T12:30:00Z,
   from: diana.doe@example.com,
   tags: null
 )

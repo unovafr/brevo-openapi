@@ -1,6 +1,6 @@
 # Brevo::ProcessApi
 
-All URIs are relative to *https://api.sendinblue.com/v3*
+All URIs are relative to *https://api.brevo.com/v3*
 
 | Method | HTTP request | Description |
 | ------ | ------------ | ----------- |
@@ -99,7 +99,8 @@ end
 api_instance = Brevo::ProcessApi.new
 opts = {
   limit: 789, # Integer | Number limitation for the result returned
-  offset: 789 # Integer | Beginning point in the list to retrieve from.
+  offset: 789, # Integer | Beginning point in the list to retrieve from.
+  sort: 'asc' # String | Sort the results in the ascending/descending order of record creation. Default order is **descending** if `sort` is not passed
 }
 
 begin
@@ -135,6 +136,7 @@ end
 | ---- | ---- | ----------- | ----- |
 | **limit** | **Integer** | Number limitation for the result returned | [optional][default to 10] |
 | **offset** | **Integer** | Beginning point in the list to retrieve from. | [optional][default to 0] |
+| **sort** | **String** | Sort the results in the ascending/descending order of record creation. Default order is **descending** if &#x60;sort&#x60; is not passed | [optional][default to &#39;desc&#39;] |
 
 ### Return type
 

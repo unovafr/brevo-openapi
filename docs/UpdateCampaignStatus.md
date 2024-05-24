@@ -4,7 +4,7 @@
 
 | Name | Type | Description | Notes |
 | ---- | ---- | ----------- | ----- |
-| **status** | **String** | Note:- replicateTemplate status will be available only for template type campaigns. | [optional] |
+| **status** | **String** | Note:- **replicateTemplate** status will be available **only for template type campaigns.**  | [optional] |
 
 ## Example
 

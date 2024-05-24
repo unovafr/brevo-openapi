@@ -12,7 +12,7 @@
 require 'brevo'
 
 instance = Brevo::CreateModel.new(
-  id: 122
+  id: 5
 )
 ```
 

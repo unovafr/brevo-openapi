@@ -1,6 +1,6 @@
 # Brevo::ResellerApi
 
-All URIs are relative to *https://api.sendinblue.com/v3*
+All URIs are relative to *https://api.brevo.com/v3*
 
 | Method | HTTP request | Description |
 | ------ | ------------ | ----------- |
@@ -15,7 +15,7 @@ All URIs are relative to *https://api.sendinblue.com/v3*
 | [**get_child_domains**](ResellerApi.md#get_child_domains) | **GET** /reseller/children/{childIdentifier}/domains | Get all sender domains for a specific child account |
 | [**get_child_info**](ResellerApi.md#get_child_info) | **GET** /reseller/children/{childIdentifier} | Get a child account&#39;s details |
 | [**get_reseller_childs**](ResellerApi.md#get_reseller_childs) | **GET** /reseller/children | Get the list of all children accounts |
-| [**get_sso_token**](ResellerApi.md#get_sso_token) | **GET** /reseller/children/{childIdentifier}/auth | Get session token to access Sendinblue (SSO) |
+| [**get_sso_token**](ResellerApi.md#get_sso_token) | **GET** /reseller/children/{childIdentifier}/auth | Get session token to access Brevo (SSO) |
 | [**remove_credits**](ResellerApi.md#remove_credits) | **POST** /reseller/children/{childIdentifier}/credits/remove | Remove Email and/or SMS credits from a specific child account |
 | [**update_child_account_status**](ResellerApi.md#update_child_account_status) | **PUT** /reseller/children/{childIdentifier}/accountStatus | Update info of reseller&#39;s child account status based on the identifier supplied |
 | [**update_child_domain**](ResellerApi.md#update_child_domain) | **PUT** /reseller/children/{childIdentifier}/domains/{domainName} | Update the sender domain of reseller&#39;s child based on the childIdentifier and domainName passed |
@@ -254,7 +254,7 @@ end
 
 api_instance = Brevo::ResellerApi.new
 opts = {
-  reseller_child: Brevo::CreateChild.new({email: 'josh.cruise@example.com', first_name: 'Josh', last_name: 'Cruise', company_name: 'Your Company', password: 'Pa55w0rd65'}) # CreateChild | reseller child to add
+  create_child: Brevo::CreateChild.new({email: 'josh.cruise@example.com', first_name: 'Josh', last_name: 'Cruise', company_name: 'Your Company', password: 'Pa55w0rd65'}) # CreateChild | reseller child to add
 }
 
 begin
@@ -288,7 +288,7 @@ end
 
 | Name | Type | Description | Notes |
 | ---- | ---- | ----------- | ----- |
-| **reseller_child** | [**CreateChild**](CreateChild.md) | reseller child to add | [optional] |
+| **create_child** | [**CreateChild**](CreateChild.md) | reseller child to add | [optional] |
 
 ### Return type
 
@@ -796,7 +796,7 @@ end
 
 > <GetSsoToken> get_sso_token(child_identifier)
 
-Get session token to access Sendinblue (SSO)
+Get session token to access Brevo (SSO)
 
 It returns a session [token] which will remain valid for a short period of time. A child account will be able to access a white-labeled section by using the following url pattern => https:/email.mydomain.com/login/sso?token=[token]
 
@@ -817,7 +817,7 @@ api_instance = Brevo::ResellerApi.new
 child_identifier = 'child_identifier_example' # String | Either auth key or id of reseller's child
 
 begin
-  # Get session token to access Sendinblue (SSO)
+  # Get session token to access Brevo (SSO)
   result = api_instance.get_sso_token(child_identifier)
   p result
 rescue Brevo::ApiError => e
@@ -833,7 +833,7 @@ This returns an Array which contains the response data, status code and headers.
 
 ```ruby
 begin
-  # Get session token to access Sendinblue (SSO)
+  # Get session token to access Brevo (SSO)
   data, status_code, headers = api_instance.get_sso_token_with_http_info(child_identifier)
   p status_code # => 2xx
   p headers # => { ... }

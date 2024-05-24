@@ -1,6 +1,6 @@
 # Brevo::EmailCampaignsApi
 
-All URIs are relative to *https://api.sendinblue.com/v3*
+All URIs are relative to *https://api.brevo.com/v3*
 
 | Method | HTTP request | Description |
 | ------ | ------------ | ----------- |
@@ -21,7 +21,7 @@ All URIs are relative to *https://api.sendinblue.com/v3*
 
 ## create_email_campaign
 
-> <CreateModel> create_email_campaign(email_campaigns)
+> <CreateModel> create_email_campaign(create_email_campaign)
 
 Create an email campaign
 
@@ -39,11 +39,11 @@ Brevo.configure do |config|
 end
 
 api_instance = Brevo::EmailCampaignsApi.new
-email_campaigns = Brevo::CreateEmailCampaign.new({sender: Brevo::CreateEmailCampaignSender.new, name: 'Newsletter - May 2017'}) # CreateEmailCampaign | Values to create a campaign
+create_email_campaign = Brevo::CreateEmailCampaign.new({sender: Brevo::CreateEmailCampaignSender.new, name: 'Newsletter - May 2017'}) # CreateEmailCampaign | Values to create a campaign
 
 begin
   # Create an email campaign
-  result = api_instance.create_email_campaign(email_campaigns)
+  result = api_instance.create_email_campaign(create_email_campaign)
   p result
 rescue Brevo::ApiError => e
   puts "Error when calling EmailCampaignsApi->create_email_campaign: #{e}"
@@ -54,12 +54,12 @@ end
 
 This returns an Array which contains the response data, status code and headers.
 
-> <Array(<CreateModel>, Integer, Hash)> create_email_campaign_with_http_info(email_campaigns)
+> <Array(<CreateModel>, Integer, Hash)> create_email_campaign_with_http_info(create_email_campaign)
 
 ```ruby
 begin
   # Create an email campaign
-  data, status_code, headers = api_instance.create_email_campaign_with_http_info(email_campaigns)
+  data, status_code, headers = api_instance.create_email_campaign_with_http_info(create_email_campaign)
   p status_code # => 2xx
   p headers # => { ... }
   p data # => <CreateModel>
@@ -72,7 +72,7 @@ end
 
 | Name | Type | Description | Notes |
 | ---- | ---- | ----------- | ----- |
-| **email_campaigns** | [**CreateEmailCampaign**](CreateEmailCampaign.md) | Values to create a campaign |  |
+| **create_email_campaign** | [**CreateEmailCampaign**](CreateEmailCampaign.md) | Values to create a campaign |  |
 
 ### Return type
 
@@ -178,7 +178,7 @@ end
 api_instance = Brevo::EmailCampaignsApi.new
 campaign_id = 789 # Integer | Id of the campaign
 opts = {
-  recipient_export: Brevo::EmailExportRecipients.new({recipients_type: 'all'}) # EmailExportRecipients | Values to send for a recipient export request
+  email_export_recipients: Brevo::EmailExportRecipients.new({recipients_type: 'all'}) # EmailExportRecipients | Values to send for a recipient export request
 }
 
 begin
@@ -213,7 +213,7 @@ end
 | Name | Type | Description | Notes |
 | ---- | ---- | ----------- | ----- |
 | **campaign_id** | **Integer** | Id of the campaign |  |
-| **recipient_export** | [**EmailExportRecipients**](EmailExportRecipients.md) | Values to send for a recipient export request | [optional] |
+| **email_export_recipients** | [**EmailExportRecipients**](EmailExportRecipients.md) | Values to send for a recipient export request | [optional] |
 
 ### Return type
 
@@ -322,7 +322,7 @@ end
 api_instance = Brevo::EmailCampaignsApi.new
 campaign_id = 789 # Integer | Id of the campaign
 opts = {
-  statistics: 'globalStats' # String | Filter on type of the statistics required. Example **globalStats** value will only fetch globalStats info of the campaign in returned response.
+  statistics: 'globalStats' # String | Filter on the type of statistics required. Example **globalStats** value will only fetch globalStats info of the campaign in returned response.
 }
 
 begin
@@ -357,7 +357,7 @@ end
 | Name | Type | Description | Notes |
 | ---- | ---- | ----------- | ----- |
 | **campaign_id** | **Integer** | Id of the campaign |  |
-| **statistics** | **String** | Filter on type of the statistics required. Example **globalStats** value will only fetch globalStats info of the campaign in returned response. | [optional] |
+| **statistics** | **String** | Filter on the type of statistics required. Example **globalStats** value will only fetch globalStats info of the campaign in returned response. | [optional] |
 
 ### Return type
 
@@ -396,11 +396,12 @@ api_instance = Brevo::EmailCampaignsApi.new
 opts = {
   type: 'classic', # String | Filter on the type of the campaigns
   status: 'suspended', # String | Filter on the status of the campaign
-  statistics: 'globalStats', # String | Filter on type of the statistics required. Example **globalStats** value will only fetch globalStats info of the campaign in returned response.
-  start_date: Time.parse('2013-10-20T19:20:30+01:00'), # Time | Mandatory if endDate is used. Starting (urlencoded) UTC date-time (YYYY-MM-DDTHH:mm:ss.SSSZ) to filter the sent email campaigns. Prefer to pass your timezone in date-time format for accurate result ( only available if either 'status' not passed and if passed is set to 'sent' )
-  end_date: Time.parse('2013-10-20T19:20:30+01:00'), # Time | Mandatory if startDate is used. Ending (urlencoded) UTC date-time (YYYY-MM-DDTHH:mm:ss.SSSZ) to filter the sent email campaigns. Prefer to pass your timezone in date-time format for accurate result ( only available if either 'status' not passed and if passed is set to 'sent' )
+  statistics: 'globalStats', # String | Filter on the type of statistics required. Example **globalStats** value will only fetch globalStats info of the campaign in returned response.
+  start_date: 'start_date_example', # String | **Mandatory if endDate is used**. Starting (urlencoded) UTC date-time (YYYY-MM-DDTHH:mm:ss.SSSZ) to filter the sent email campaigns. **Prefer to pass your timezone in date-time format for accurate result** ( only available if either 'status' not passed and if passed is set to 'sent' ) 
+  end_date: 'end_date_example', # String | **Mandatory if startDate is used**. Ending (urlencoded) UTC date-time (YYYY-MM-DDTHH:mm:ss.SSSZ) to filter the sent email campaigns. **Prefer to pass your timezone in date-time format for accurate result** ( only available if either 'status' not passed and if passed is set to 'sent' ) 
   limit: 789, # Integer | Number of documents per page
   offset: 789, # Integer | Index of the first document in the page
+  sort: 'asc', # String | Sort the results in the ascending/descending order of record creation. Default order is **descending** if `sort` is not passed
   exclude_html_content: true # Boolean | Use this flag to exclude htmlContent from the response body. If set to **true**, htmlContent field will be returned as empty string in the response body
 }
 
@@ -437,11 +438,12 @@ end
 | ---- | ---- | ----------- | ----- |
 | **type** | **String** | Filter on the type of the campaigns | [optional] |
 | **status** | **String** | Filter on the status of the campaign | [optional] |
-| **statistics** | **String** | Filter on type of the statistics required. Example **globalStats** value will only fetch globalStats info of the campaign in returned response. | [optional] |
-| **start_date** | **Time** | Mandatory if endDate is used. Starting (urlencoded) UTC date-time (YYYY-MM-DDTHH:mm:ss.SSSZ) to filter the sent email campaigns. Prefer to pass your timezone in date-time format for accurate result ( only available if either &#39;status&#39; not passed and if passed is set to &#39;sent&#39; ) | [optional] |
-| **end_date** | **Time** | Mandatory if startDate is used. Ending (urlencoded) UTC date-time (YYYY-MM-DDTHH:mm:ss.SSSZ) to filter the sent email campaigns. Prefer to pass your timezone in date-time format for accurate result ( only available if either &#39;status&#39; not passed and if passed is set to &#39;sent&#39; ) | [optional] |
-| **limit** | **Integer** | Number of documents per page | [optional][default to 500] |
+| **statistics** | **String** | Filter on the type of statistics required. Example **globalStats** value will only fetch globalStats info of the campaign in returned response. | [optional] |
+| **start_date** | **String** | **Mandatory if endDate is used**. Starting (urlencoded) UTC date-time (YYYY-MM-DDTHH:mm:ss.SSSZ) to filter the sent email campaigns. **Prefer to pass your timezone in date-time format for accurate result** ( only available if either &#39;status&#39; not passed and if passed is set to &#39;sent&#39; )  | [optional] |
+| **end_date** | **String** | **Mandatory if startDate is used**. Ending (urlencoded) UTC date-time (YYYY-MM-DDTHH:mm:ss.SSSZ) to filter the sent email campaigns. **Prefer to pass your timezone in date-time format for accurate result** ( only available if either &#39;status&#39; not passed and if passed is set to &#39;sent&#39; )  | [optional] |
+| **limit** | **Integer** | Number of documents per page | [optional][default to 50] |
 | **offset** | **Integer** | Index of the first document in the page | [optional][default to 0] |
+| **sort** | **String** | Sort the results in the ascending/descending order of record creation. Default order is **descending** if &#x60;sort&#x60; is not passed | [optional][default to &#39;desc&#39;] |
 | **exclude_html_content** | **Boolean** | Use this flag to exclude htmlContent from the response body. If set to **true**, htmlContent field will be returned as empty string in the response body | [optional] |
 
 ### Return type
@@ -455,7 +457,7 @@ end
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: application/json, applications/json
+- **Accept**: application/json
 
 
 ## get_shared_template_url
@@ -464,7 +466,7 @@ end
 
 Get a shared template url
 
-Get a unique URL to share & import an email template from one Sendinblue account to another.
+Get a unique URL to share & import an email template from one Brevo account to another.
 
 ### Examples
 
@@ -671,7 +673,7 @@ nil (empty response body)
 
 ## send_test_email
 
-> send_test_email(campaign_id, email_to)
+> send_test_email(campaign_id, send_test_email)
 
 Send an email campaign to your test list
 
@@ -690,11 +692,11 @@ end
 
 api_instance = Brevo::EmailCampaignsApi.new
 campaign_id = 789 # Integer | Id of the campaign
-email_to = Brevo::SendTestEmail.new # SendTestEmail | 
+send_test_email = Brevo::SendTestEmail.new # SendTestEmail | 
 
 begin
   # Send an email campaign to your test list
-  api_instance.send_test_email(campaign_id, email_to)
+  api_instance.send_test_email(campaign_id, send_test_email)
 rescue Brevo::ApiError => e
   puts "Error when calling EmailCampaignsApi->send_test_email: #{e}"
 end
@@ -704,12 +706,12 @@ end
 
 This returns an Array which contains the response data (`nil` in this case), status code and headers.
 
-> <Array(nil, Integer, Hash)> send_test_email_with_http_info(campaign_id, email_to)
+> <Array(nil, Integer, Hash)> send_test_email_with_http_info(campaign_id, send_test_email)
 
 ```ruby
 begin
   # Send an email campaign to your test list
-  data, status_code, headers = api_instance.send_test_email_with_http_info(campaign_id, email_to)
+  data, status_code, headers = api_instance.send_test_email_with_http_info(campaign_id, send_test_email)
   p status_code # => 2xx
   p headers # => { ... }
   p data # => nil
@@ -723,7 +725,7 @@ end
 | Name | Type | Description | Notes |
 | ---- | ---- | ----------- | ----- |
 | **campaign_id** | **Integer** | Id of the campaign |  |
-| **email_to** | [**SendTestEmail**](SendTestEmail.md) |  |  |
+| **send_test_email** | [**SendTestEmail**](SendTestEmail.md) |  |  |
 
 ### Return type
 
@@ -741,7 +743,7 @@ nil (empty response body)
 
 ## update_campaign_status
 
-> update_campaign_status(campaign_id, status)
+> update_campaign_status(campaign_id, update_campaign_status)
 
 Update an email campaign status
 
@@ -760,11 +762,11 @@ end
 
 api_instance = Brevo::EmailCampaignsApi.new
 campaign_id = 789 # Integer | Id of the campaign
-status = Brevo::UpdateCampaignStatus.new # UpdateCampaignStatus | Status of the campaign
+update_campaign_status = Brevo::UpdateCampaignStatus.new # UpdateCampaignStatus | Status of the campaign
 
 begin
   # Update an email campaign status
-  api_instance.update_campaign_status(campaign_id, status)
+  api_instance.update_campaign_status(campaign_id, update_campaign_status)
 rescue Brevo::ApiError => e
   puts "Error when calling EmailCampaignsApi->update_campaign_status: #{e}"
 end
@@ -774,12 +776,12 @@ end
 
 This returns an Array which contains the response data (`nil` in this case), status code and headers.
 
-> <Array(nil, Integer, Hash)> update_campaign_status_with_http_info(campaign_id, status)
+> <Array(nil, Integer, Hash)> update_campaign_status_with_http_info(campaign_id, update_campaign_status)
 
 ```ruby
 begin
   # Update an email campaign status
-  data, status_code, headers = api_instance.update_campaign_status_with_http_info(campaign_id, status)
+  data, status_code, headers = api_instance.update_campaign_status_with_http_info(campaign_id, update_campaign_status)
   p status_code # => 2xx
   p headers # => { ... }
   p data # => nil
@@ -793,7 +795,7 @@ end
 | Name | Type | Description | Notes |
 | ---- | ---- | ----------- | ----- |
 | **campaign_id** | **Integer** | Id of the campaign |  |
-| **status** | [**UpdateCampaignStatus**](UpdateCampaignStatus.md) | Status of the campaign |  |
+| **update_campaign_status** | [**UpdateCampaignStatus**](UpdateCampaignStatus.md) | Status of the campaign |  |
 
 ### Return type
 
@@ -811,7 +813,7 @@ nil (empty response body)
 
 ## update_email_campaign
 
-> update_email_campaign(campaign_id, email_campaign)
+> update_email_campaign(campaign_id, update_email_campaign)
 
 Update an email campaign
 
@@ -830,11 +832,11 @@ end
 
 api_instance = Brevo::EmailCampaignsApi.new
 campaign_id = 789 # Integer | Id of the campaign
-email_campaign = Brevo::UpdateEmailCampaign.new # UpdateEmailCampaign | Values to update a campaign
+update_email_campaign = Brevo::UpdateEmailCampaign.new # UpdateEmailCampaign | Values to update a campaign
 
 begin
   # Update an email campaign
-  api_instance.update_email_campaign(campaign_id, email_campaign)
+  api_instance.update_email_campaign(campaign_id, update_email_campaign)
 rescue Brevo::ApiError => e
   puts "Error when calling EmailCampaignsApi->update_email_campaign: #{e}"
 end
@@ -844,12 +846,12 @@ end
 
 This returns an Array which contains the response data (`nil` in this case), status code and headers.
 
-> <Array(nil, Integer, Hash)> update_email_campaign_with_http_info(campaign_id, email_campaign)
+> <Array(nil, Integer, Hash)> update_email_campaign_with_http_info(campaign_id, update_email_campaign)
 
 ```ruby
 begin
   # Update an email campaign
-  data, status_code, headers = api_instance.update_email_campaign_with_http_info(campaign_id, email_campaign)
+  data, status_code, headers = api_instance.update_email_campaign_with_http_info(campaign_id, update_email_campaign)
   p status_code # => 2xx
   p headers # => { ... }
   p data # => nil
@@ -863,7 +865,7 @@ end
 | Name | Type | Description | Notes |
 | ---- | ---- | ----------- | ----- |
 | **campaign_id** | **Integer** | Id of the campaign |  |
-| **email_campaign** | [**UpdateEmailCampaign**](UpdateEmailCampaign.md) | Values to update a campaign |  |
+| **update_email_campaign** | [**UpdateEmailCampaign**](UpdateEmailCampaign.md) | Values to update a campaign |  |
 
 ### Return type
 
@@ -881,7 +883,7 @@ nil (empty response body)
 
 ## upload_image_to_gallery
 
-> upload_image_to_gallery(upload_image)
+> <UploadImageModel> upload_image_to_gallery(upload_image_to_gallery)
 
 Upload an image to your account's image gallery
 
@@ -899,11 +901,12 @@ Brevo.configure do |config|
 end
 
 api_instance = Brevo::EmailCampaignsApi.new
-upload_image = Brevo::UploadImageToGallery.new({image_url: 'https://somedomain.com/image1.jpg'}) # UploadImageToGallery | Parameters to upload an image
+upload_image_to_gallery = Brevo::UploadImageToGallery.new({image_url: 'https://somedomain.com/image1.jpg'}) # UploadImageToGallery | Parameters to upload an image
 
 begin
   # Upload an image to your account's image gallery
-  api_instance.upload_image_to_gallery(upload_image)
+  result = api_instance.upload_image_to_gallery(upload_image_to_gallery)
+  p result
 rescue Brevo::ApiError => e
   puts "Error when calling EmailCampaignsApi->upload_image_to_gallery: #{e}"
 end
@@ -911,17 +914,17 @@ end
 
 #### Using the upload_image_to_gallery_with_http_info variant
 
-This returns an Array which contains the response data (`nil` in this case), status code and headers.
+This returns an Array which contains the response data, status code and headers.
 
-> <Array(nil, Integer, Hash)> upload_image_to_gallery_with_http_info(upload_image)
+> <Array(<UploadImageModel>, Integer, Hash)> upload_image_to_gallery_with_http_info(upload_image_to_gallery)
 
 ```ruby
 begin
   # Upload an image to your account's image gallery
-  data, status_code, headers = api_instance.upload_image_to_gallery_with_http_info(upload_image)
+  data, status_code, headers = api_instance.upload_image_to_gallery_with_http_info(upload_image_to_gallery)
   p status_code # => 2xx
   p headers # => { ... }
-  p data # => nil
+  p data # => <UploadImageModel>
 rescue Brevo::ApiError => e
   puts "Error when calling EmailCampaignsApi->upload_image_to_gallery_with_http_info: #{e}"
 end
@@ -931,11 +934,11 @@ end
 
 | Name | Type | Description | Notes |
 | ---- | ---- | ----------- | ----- |
-| **upload_image** | [**UploadImageToGallery**](UploadImageToGallery.md) | Parameters to upload an image |  |
+| **upload_image_to_gallery** | [**UploadImageToGallery**](UploadImageToGallery.md) | Parameters to upload an image |  |
 
 ### Return type
 
-nil (empty response body)
+[**UploadImageModel**](UploadImageModel.md)
 
 ### Authorization
 

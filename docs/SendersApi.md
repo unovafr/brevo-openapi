@@ -1,6 +1,6 @@
 # Brevo::SendersApi
 
-All URIs are relative to *https://api.sendinblue.com/v3*
+All URIs are relative to *https://api.brevo.com/v3*
 
 | Method | HTTP request | Description |
 | ------ | ------------ | ----------- |
@@ -10,6 +10,7 @@ All URIs are relative to *https://api.sendinblue.com/v3*
 | [**get_ips_from_sender**](SendersApi.md#get_ips_from_sender) | **GET** /senders/{senderId}/ips | Get all the dedicated IPs for a sender |
 | [**get_senders**](SendersApi.md#get_senders) | **GET** /senders | Get the list of all your senders |
 | [**update_sender**](SendersApi.md#update_sender) | **PUT** /senders/{senderId} | Update a sender |
+| [**validate_sender_by_otp**](SendersApi.md#validate_sender_by_otp) | **PUT** /senders/{senderId}/validate | Validate Sender using OTP |
 
 
 ## create_sender
@@ -307,7 +308,7 @@ end
 
 api_instance = Brevo::SendersApi.new
 opts = {
-  ip: 'ip_example', # String | Filter your senders for a specific ip (available for dedicated IP usage only)
+  ip: 'ip_example', # String | Filter your senders for a specific ip. **Available for dedicated IP usage only** 
   domain: 'domain_example' # String | Filter your senders for a specific domain
 }
 
@@ -342,7 +343,7 @@ end
 
 | Name | Type | Description | Notes |
 | ---- | ---- | ----------- | ----- |
-| **ip** | **String** | Filter your senders for a specific ip (available for dedicated IP usage only) | [optional] |
+| **ip** | **String** | Filter your senders for a specific ip. **Available for dedicated IP usage only**  | [optional] |
 | **domain** | **String** | Filter your senders for a specific domain | [optional] |
 
 ### Return type
@@ -416,6 +417,78 @@ end
 | ---- | ---- | ----------- | ----- |
 | **sender_id** | **Integer** | Id of the sender |  |
 | **sender** | [**UpdateSender**](UpdateSender.md) | sender&#39;s name | [optional] |
+
+### Return type
+
+nil (empty response body)
+
+### Authorization
+
+[api-key](../README.md#api-key)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+
+## validate_sender_by_otp
+
+> validate_sender_by_otp(sender_id, opts)
+
+Validate Sender using OTP
+
+### Examples
+
+```ruby
+require 'time'
+require 'brevo'
+# setup authorization
+Brevo.configure do |config|
+  # Configure API key authorization: api-key
+  config.api_key['api-key'] = 'YOUR API KEY'
+  # Uncomment the following line to set a prefix for the API key, e.g. 'Bearer' (defaults to nil)
+  # config.api_key_prefix['api-key'] = 'Bearer'
+end
+
+api_instance = Brevo::SendersApi.new
+sender_id = 789 # Integer | Id of the sender
+opts = {
+  sender: Brevo::Otp.new({otp: 123456}) # Otp | otp
+}
+
+begin
+  # Validate Sender using OTP
+  api_instance.validate_sender_by_otp(sender_id, opts)
+rescue Brevo::ApiError => e
+  puts "Error when calling SendersApi->validate_sender_by_otp: #{e}"
+end
+```
+
+#### Using the validate_sender_by_otp_with_http_info variant
+
+This returns an Array which contains the response data (`nil` in this case), status code and headers.
+
+> <Array(nil, Integer, Hash)> validate_sender_by_otp_with_http_info(sender_id, opts)
+
+```ruby
+begin
+  # Validate Sender using OTP
+  data, status_code, headers = api_instance.validate_sender_by_otp_with_http_info(sender_id, opts)
+  p status_code # => 2xx
+  p headers # => { ... }
+  p data # => nil
+rescue Brevo::ApiError => e
+  puts "Error when calling SendersApi->validate_sender_by_otp_with_http_info: #{e}"
+end
+```
+
+### Parameters
+
+| Name | Type | Description | Notes |
+| ---- | ---- | ----------- | ----- |
+| **sender_id** | **Integer** | Id of the sender |  |
+| **sender** | [**Otp**](Otp.md) | otp | [optional] |
 
 ### Return type
 

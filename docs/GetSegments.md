@@ -4,7 +4,7 @@
 
 | Name | Type | Description | Notes |
 | ---- | ---- | ----------- | ----- |
-| **segments** | [**GetSegmentsSegments**](GetSegmentsSegments.md) |  | [optional] |
+| **segments** | **Array&lt;Object&gt;** | Listing of all the segments available in your account | [optional] |
 | **count** | **Integer** | Number of Segments in your account | [optional] |
 
 ## Example

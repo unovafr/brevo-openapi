@@ -14,6 +14,8 @@
 | **hard_bounces** | **Integer** | Number of harbounce for the campaign |  |
 | **unique_views** | **Integer** | Number of unique openings for the campaign |  |
 | **trackable_views** | **Integer** | Recipients without any privacy protection option enabled in their email client |  |
+| **trackable_views_rate** | **Float** | Rate of recipients without any privacy protection option enabled in their email client | [optional] |
+| **estimated_views** | **Integer** | Rate of recipients without any privacy protection option enabled in their email client, applied to all delivered emails | [optional] |
 | **unsubscriptions** | **Integer** | Number of unsubscription for the campaign |  |
 | **viewed** | **Integer** | Number of openings for the campaign |  |
 | **deferred** | **Integer** | Number of deferred emails for the campaign | [optional] |
@@ -35,6 +37,8 @@ instance = Brevo::GetCampaignStats.new(
   hard_bounces: 87,
   unique_views: 7779,
   trackable_views: 5661,
+  trackable_views_rate: 23.45,
+  estimated_views: 560,
   unsubscriptions: 2,
   viewed: 8999,
   deferred: 30,

@@ -12,6 +12,7 @@
 | **opened** | [**Array&lt;GetContactCampaignStatsOpenedInner&gt;**](GetContactCampaignStatsOpenedInner.md) |  | [optional] |
 | **clicked** | [**Array&lt;GetContactCampaignStatsClickedInner&gt;**](GetContactCampaignStatsClickedInner.md) |  | [optional] |
 | **transac_attributes** | [**Array&lt;GetContactCampaignStatsTransacAttributesInner&gt;**](GetContactCampaignStatsTransacAttributesInner.md) |  | [optional] |
+| **delivered** | [**Array&lt;GetExtendedContactDetailsAllOfStatisticsMessagesSent&gt;**](GetExtendedContactDetailsAllOfStatisticsMessagesSent.md) |  | [optional] |
 
 ## Example
 
@@ -26,7 +27,8 @@ instance = Brevo::GetContactCampaignStats.new(
   unsubscriptions: null,
   opened: null,
   clicked: null,
-  transac_attributes: null
+  transac_attributes: null,
+  delivered: null
 )
 ```
 

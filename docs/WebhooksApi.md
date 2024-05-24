@@ -1,11 +1,12 @@
 # Brevo::WebhooksApi
 
-All URIs are relative to *https://api.sendinblue.com/v3*
+All URIs are relative to *https://api.brevo.com/v3*
 
 | Method | HTTP request | Description |
 | ------ | ------------ | ----------- |
 | [**create_webhook**](WebhooksApi.md#create_webhook) | **POST** /webhooks | Create a webhook |
 | [**delete_webhook**](WebhooksApi.md#delete_webhook) | **DELETE** /webhooks/{webhookId} | Delete a webhook |
+| [**export_webhooks_history**](WebhooksApi.md#export_webhooks_history) | **POST** /webhooks/export | Export all webhook events |
 | [**get_webhook**](WebhooksApi.md#get_webhook) | **GET** /webhooks/{webhookId} | Get a webhook details |
 | [**get_webhooks**](WebhooksApi.md#get_webhooks) | **GET** /webhooks | Get all webhooks |
 | [**update_webhook**](WebhooksApi.md#update_webhook) | **PUT** /webhooks/{webhookId} | Update a webhook |
@@ -145,6 +146,77 @@ nil (empty response body)
 ### HTTP request headers
 
 - **Content-Type**: Not defined
+- **Accept**: application/json
+
+
+## export_webhooks_history
+
+> <CreatedProcessId> export_webhooks_history(export_webhooks_history_request)
+
+Export all webhook events
+
+This endpoint will submit a request to get the history of webhooks in the CSV file. The link to download the CSV file will be sent to the webhook that was provided in the notifyURL.
+
+### Examples
+
+```ruby
+require 'time'
+require 'brevo'
+# setup authorization
+Brevo.configure do |config|
+  # Configure API key authorization: api-key
+  config.api_key['api-key'] = 'YOUR API KEY'
+  # Uncomment the following line to set a prefix for the API key, e.g. 'Bearer' (defaults to nil)
+  # config.api_key_prefix['api-key'] = 'Bearer'
+end
+
+api_instance = Brevo::WebhooksApi.new
+export_webhooks_history_request = Brevo::ExportWebhooksHistory.new({type: 'transactional', event: 'invalid_parameter', notify_url: 'https://brevo.com'}) # ExportWebhooksHistoryRequest | Values to submit for webhooks history
+
+begin
+  # Export all webhook events
+  result = api_instance.export_webhooks_history(export_webhooks_history_request)
+  p result
+rescue Brevo::ApiError => e
+  puts "Error when calling WebhooksApi->export_webhooks_history: #{e}"
+end
+```
+
+#### Using the export_webhooks_history_with_http_info variant
+
+This returns an Array which contains the response data, status code and headers.
+
+> <Array(<CreatedProcessId>, Integer, Hash)> export_webhooks_history_with_http_info(export_webhooks_history_request)
+
+```ruby
+begin
+  # Export all webhook events
+  data, status_code, headers = api_instance.export_webhooks_history_with_http_info(export_webhooks_history_request)
+  p status_code # => 2xx
+  p headers # => { ... }
+  p data # => <CreatedProcessId>
+rescue Brevo::ApiError => e
+  puts "Error when calling WebhooksApi->export_webhooks_history_with_http_info: #{e}"
+end
+```
+
+### Parameters
+
+| Name | Type | Description | Notes |
+| ---- | ---- | ----------- | ----- |
+| **export_webhooks_history_request** | [**ExportWebhooksHistoryRequest**](ExportWebhooksHistoryRequest.md) | Values to submit for webhooks history |  |
+
+### Return type
+
+[**CreatedProcessId**](CreatedProcessId.md)
+
+### Authorization
+
+[api-key](../README.md#api-key)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
 - **Accept**: application/json
 
 

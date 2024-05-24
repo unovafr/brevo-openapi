@@ -4,7 +4,7 @@
 
 | Name | Type | Description | Notes |
 | ---- | ---- | ----------- | ----- |
-| **code** | **Integer** | Response code |  |
+| **code** | **String** | Response code |  |
 | **message** | **String** | Response message |  |
 | **unexisting_emails** | **Array&lt;String&gt;** |  | [optional] |
 | **without_list_emails** | **Array&lt;String&gt;** |  | [optional] |
@@ -16,7 +16,7 @@
 require 'brevo'
 
 instance = Brevo::PostSendFailed.new(
-  code: null,
+  code: invalid_parameter,
   message: The email could not be sent to all recipients,
   unexisting_emails: null,
   without_list_emails: null,

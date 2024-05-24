@@ -5,7 +5,7 @@
 | Name | Type | Description | Notes |
 | ---- | ---- | ----------- | ----- |
 | **campaigns** | [**Array&lt;GetWhatsappCampaignsCampaignsInner&gt;**](GetWhatsappCampaignsCampaignsInner.md) |  | [optional] |
-| **count** | **Integer** | Number of WhatsApp campaigns retrived | [optional] |
+| **count** | **Integer** | Number of WhatsApp campaigns retrieved | [optional] |
 
 ## Example
 
@@ -14,7 +14,7 @@ require 'brevo'
 
 instance = Brevo::GetWhatsappCampaigns.new(
   campaigns: null,
-  count: 24
+  count: 40
 )
 ```
 

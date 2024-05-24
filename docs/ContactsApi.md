@@ -1,6 +1,6 @@
 # Brevo::ContactsApi
 
-All URIs are relative to *https://api.sendinblue.com/v3*
+All URIs are relative to *https://api.brevo.com/v3*
 
 | Method | HTTP request | Description |
 | ------ | ------------ | ----------- |
@@ -11,12 +11,12 @@ All URIs are relative to *https://api.sendinblue.com/v3*
 | [**create_folder**](ContactsApi.md#create_folder) | **POST** /contacts/folders | Create a folder |
 | [**create_list**](ContactsApi.md#create_list) | **POST** /contacts/lists | Create a list |
 | [**delete_attribute**](ContactsApi.md#delete_attribute) | **DELETE** /contacts/attributes/{attributeCategory}/{attributeName} | Delete an attribute |
-| [**delete_contact**](ContactsApi.md#delete_contact) | **DELETE** /contacts/{email} | Delete a contact |
+| [**delete_contact**](ContactsApi.md#delete_contact) | **DELETE** /contacts/{identifier} | Delete a contact |
 | [**delete_folder**](ContactsApi.md#delete_folder) | **DELETE** /contacts/folders/{folderId} | Delete a folder (and all its lists) |
 | [**delete_list**](ContactsApi.md#delete_list) | **DELETE** /contacts/lists/{listId} | Delete a list |
 | [**get_attributes**](ContactsApi.md#get_attributes) | **GET** /contacts/attributes | List all attributes |
-| [**get_contact_info**](ContactsApi.md#get_contact_info) | **GET** /contacts/{email} | Get a contact&#39;s details |
-| [**get_contact_stats**](ContactsApi.md#get_contact_stats) | **GET** /contacts/{email}/campaignStats | Get email campaigns&#39; statistics for a contact |
+| [**get_contact_info**](ContactsApi.md#get_contact_info) | **GET** /contacts/{identifier} | Get a contact&#39;s details |
+| [**get_contact_stats**](ContactsApi.md#get_contact_stats) | **GET** /contacts/{identifier}/campaignStats | Get email campaigns&#39; statistics for a contact |
 | [**get_contacts**](ContactsApi.md#get_contacts) | **GET** /contacts | Get all the contacts |
 | [**get_contacts_from_list**](ContactsApi.md#get_contacts_from_list) | **GET** /contacts/lists/{listId}/contacts | Get contacts in a list |
 | [**get_folder**](ContactsApi.md#get_folder) | **GET** /contacts/folders/{folderId} | Returns a folder&#39;s details |
@@ -29,14 +29,15 @@ All URIs are relative to *https://api.sendinblue.com/v3*
 | [**remove_contact_from_list**](ContactsApi.md#remove_contact_from_list) | **POST** /contacts/lists/{listId}/contacts/remove | Delete a contact from a list |
 | [**request_contact_export**](ContactsApi.md#request_contact_export) | **POST** /contacts/export | Export contacts |
 | [**update_attribute**](ContactsApi.md#update_attribute) | **PUT** /contacts/attributes/{attributeCategory}/{attributeName} | Update contact attribute |
-| [**update_contact**](ContactsApi.md#update_contact) | **PUT** /contacts/{email} | Update a contact |
+| [**update_batch_contacts**](ContactsApi.md#update_batch_contacts) | **POST** /contacts/batch | Update multiple contacts |
+| [**update_contact**](ContactsApi.md#update_contact) | **PUT** /contacts/{identifier} | Update a contact |
 | [**update_folder**](ContactsApi.md#update_folder) | **PUT** /contacts/folders/{folderId} | Update a folder |
 | [**update_list**](ContactsApi.md#update_list) | **PUT** /contacts/lists/{listId} | Update a list |
 
 
 ## add_contact_to_list
 
-> <PostContactInfo> add_contact_to_list(list_id, contact_emails)
+> <PostContactInfo> add_contact_to_list(list_id, add_contact_to_list_request)
 
 Add existing contacts to a list
 
@@ -55,11 +56,11 @@ end
 
 api_instance = Brevo::ContactsApi.new
 list_id = 789 # Integer | Id of the list
-contact_emails = Brevo::AddContactToList.new # AddContactToList | Emails addresses of the contacts
+add_contact_to_list_request = Brevo::AddContactToListByEmails.new # AddContactToListRequest | Emails addresses OR IDs of the contacts
 
 begin
   # Add existing contacts to a list
-  result = api_instance.add_contact_to_list(list_id, contact_emails)
+  result = api_instance.add_contact_to_list(list_id, add_contact_to_list_request)
   p result
 rescue Brevo::ApiError => e
   puts "Error when calling ContactsApi->add_contact_to_list: #{e}"
@@ -70,12 +71,12 @@ end
 
 This returns an Array which contains the response data, status code and headers.
 
-> <Array(<PostContactInfo>, Integer, Hash)> add_contact_to_list_with_http_info(list_id, contact_emails)
+> <Array(<PostContactInfo>, Integer, Hash)> add_contact_to_list_with_http_info(list_id, add_contact_to_list_request)
 
 ```ruby
 begin
   # Add existing contacts to a list
-  data, status_code, headers = api_instance.add_contact_to_list_with_http_info(list_id, contact_emails)
+  data, status_code, headers = api_instance.add_contact_to_list_with_http_info(list_id, add_contact_to_list_request)
   p status_code # => 2xx
   p headers # => { ... }
   p data # => <PostContactInfo>
@@ -89,7 +90,7 @@ end
 | Name | Type | Description | Notes |
 | ---- | ---- | ----------- | ----- |
 | **list_id** | **Integer** | Id of the list |  |
-| **contact_emails** | [**AddContactToList**](AddContactToList.md) | Emails addresses of the contacts |  |
+| **add_contact_to_list_request** | [**AddContactToListRequest**](AddContactToListRequest.md) | Emails addresses OR IDs of the contacts |  |
 
 ### Return type
 
@@ -524,7 +525,7 @@ nil (empty response body)
 
 ## delete_contact
 
-> delete_contact(email)
+> delete_contact(identifier)
 
 Delete a contact
 
@@ -542,11 +543,11 @@ Brevo.configure do |config|
 end
 
 api_instance = Brevo::ContactsApi.new
-email = 'email_example' # String | Email (urlencoded) of the contact
+identifier = nil # GetContactInfoIdentifierParameter | Email (urlencoded) OR ID of the contact
 
 begin
   # Delete a contact
-  api_instance.delete_contact(email)
+  api_instance.delete_contact(identifier)
 rescue Brevo::ApiError => e
   puts "Error when calling ContactsApi->delete_contact: #{e}"
 end
@@ -556,12 +557,12 @@ end
 
 This returns an Array which contains the response data (`nil` in this case), status code and headers.
 
-> <Array(nil, Integer, Hash)> delete_contact_with_http_info(email)
+> <Array(nil, Integer, Hash)> delete_contact_with_http_info(identifier)
 
 ```ruby
 begin
   # Delete a contact
-  data, status_code, headers = api_instance.delete_contact_with_http_info(email)
+  data, status_code, headers = api_instance.delete_contact_with_http_info(identifier)
   p status_code # => 2xx
   p headers # => { ... }
   p data # => nil
@@ -574,7 +575,7 @@ end
 
 | Name | Type | Description | Notes |
 | ---- | ---- | ----------- | ----- |
-| **email** | **String** | Email (urlencoded) of the contact |  |
+| **identifier** | [**GetContactInfoIdentifierParameter**](.md) | Email (urlencoded) OR ID of the contact |  |
 
 ### Return type
 
@@ -794,9 +795,11 @@ This endpoint does not need any parameter.
 
 ## get_contact_info
 
-> <GetExtendedContactDetails> get_contact_info(email)
+> <GetExtendedContactDetails> get_contact_info(identifier, opts)
 
 Get a contact's details
+
+Along with the contact details, this endpoint will show the statistics of contact for the recent 90 days by default. To fetch the earlier statistics, please use Get contact campaign stats ``https://developers.brevo.com/reference/contacts-7#getcontactstats`` endpoint with the appropriate date ranges.
 
 ### Examples
 
@@ -812,11 +815,15 @@ Brevo.configure do |config|
 end
 
 api_instance = Brevo::ContactsApi.new
-email = 'email_example' # String | Email (urlencoded) of the contact OR its SMS attribute value
+identifier = nil # GetContactInfoIdentifierParameter | Email (urlencoded) OR ID of the contact OR its SMS attribute value
+opts = {
+  start_date: 'start_date_example', # String | **Mandatory if endDate is used.** Starting date (YYYY-MM-DD) of the statistic events specific to campaigns. Must be lower than equal to endDate 
+  end_date: 'end_date_example' # String | **Mandatory if startDate is used.** Ending date (YYYY-MM-DD) of the statistic events specific to campaigns. Must be greater than equal to startDate. 
+}
 
 begin
   # Get a contact's details
-  result = api_instance.get_contact_info(email)
+  result = api_instance.get_contact_info(identifier, opts)
   p result
 rescue Brevo::ApiError => e
   puts "Error when calling ContactsApi->get_contact_info: #{e}"
@@ -827,12 +834,12 @@ end
 
 This returns an Array which contains the response data, status code and headers.
 
-> <Array(<GetExtendedContactDetails>, Integer, Hash)> get_contact_info_with_http_info(email)
+> <Array(<GetExtendedContactDetails>, Integer, Hash)> get_contact_info_with_http_info(identifier, opts)
 
 ```ruby
 begin
   # Get a contact's details
-  data, status_code, headers = api_instance.get_contact_info_with_http_info(email)
+  data, status_code, headers = api_instance.get_contact_info_with_http_info(identifier, opts)
   p status_code # => 2xx
   p headers # => { ... }
   p data # => <GetExtendedContactDetails>
@@ -845,7 +852,9 @@ end
 
 | Name | Type | Description | Notes |
 | ---- | ---- | ----------- | ----- |
-| **email** | **String** | Email (urlencoded) of the contact OR its SMS attribute value |  |
+| **identifier** | [**GetContactInfoIdentifierParameter**](.md) | Email (urlencoded) OR ID of the contact OR its SMS attribute value |  |
+| **start_date** | **String** | **Mandatory if endDate is used.** Starting date (YYYY-MM-DD) of the statistic events specific to campaigns. Must be lower than equal to endDate  | [optional] |
+| **end_date** | **String** | **Mandatory if startDate is used.** Ending date (YYYY-MM-DD) of the statistic events specific to campaigns. Must be greater than equal to startDate.  | [optional] |
 
 ### Return type
 
@@ -863,7 +872,7 @@ end
 
 ## get_contact_stats
 
-> <GetContactCampaignStats> get_contact_stats(email, opts)
+> <GetContactCampaignStats> get_contact_stats(identifier, opts)
 
 Get email campaigns' statistics for a contact
 
@@ -881,15 +890,15 @@ Brevo.configure do |config|
 end
 
 api_instance = Brevo::ContactsApi.new
-email = 'email_example' # String | Email address (urlencoded) of the contact
+identifier = nil # GetContactInfoIdentifierParameter | Email (urlencoded) OR ID of the contact
 opts = {
-  start_date: Date.parse('2013-10-20'), # Date | Mandatory if endDate is used. Starting date (YYYY-MM-DD) of the statistic events specific to campaigns. Must be lower than equal to endDate
-  end_date: Date.parse('2013-10-20') # Date | Mandatory if startDate is used. Ending date (YYYY-MM-DD) of the statistic events specific to campaigns. Must be greater than equal to startDate
+  start_date: 'start_date_example', # String | **Mandatory if endDate is used.** Starting date (YYYY-MM-DD) of the statistic events specific to campaigns. Must be lower than equal to endDate 
+  end_date: 'end_date_example' # String | **Mandatory if startDate is used.** Ending date (YYYY-MM-DD) of the statistic events specific to campaigns. Must be greater than equal to startDate. Maximum difference between startDate and endDate should not be greater than 90 days 
 }
 
 begin
   # Get email campaigns' statistics for a contact
-  result = api_instance.get_contact_stats(email, opts)
+  result = api_instance.get_contact_stats(identifier, opts)
   p result
 rescue Brevo::ApiError => e
   puts "Error when calling ContactsApi->get_contact_stats: #{e}"
@@ -900,12 +909,12 @@ end
 
 This returns an Array which contains the response data, status code and headers.
 
-> <Array(<GetContactCampaignStats>, Integer, Hash)> get_contact_stats_with_http_info(email, opts)
+> <Array(<GetContactCampaignStats>, Integer, Hash)> get_contact_stats_with_http_info(identifier, opts)
 
 ```ruby
 begin
   # Get email campaigns' statistics for a contact
-  data, status_code, headers = api_instance.get_contact_stats_with_http_info(email, opts)
+  data, status_code, headers = api_instance.get_contact_stats_with_http_info(identifier, opts)
   p status_code # => 2xx
   p headers # => { ... }
   p data # => <GetContactCampaignStats>
@@ -918,9 +927,9 @@ end
 
 | Name | Type | Description | Notes |
 | ---- | ---- | ----------- | ----- |
-| **email** | **String** | Email address (urlencoded) of the contact |  |
-| **start_date** | **Date** | Mandatory if endDate is used. Starting date (YYYY-MM-DD) of the statistic events specific to campaigns. Must be lower than equal to endDate | [optional] |
-| **end_date** | **Date** | Mandatory if startDate is used. Ending date (YYYY-MM-DD) of the statistic events specific to campaigns. Must be greater than equal to startDate | [optional] |
+| **identifier** | [**GetContactInfoIdentifierParameter**](.md) | Email (urlencoded) OR ID of the contact |  |
+| **start_date** | **String** | **Mandatory if endDate is used.** Starting date (YYYY-MM-DD) of the statistic events specific to campaigns. Must be lower than equal to endDate  | [optional] |
+| **end_date** | **String** | **Mandatory if startDate is used.** Ending date (YYYY-MM-DD) of the statistic events specific to campaigns. Must be greater than equal to startDate. Maximum difference between startDate and endDate should not be greater than 90 days  | [optional] |
 
 ### Return type
 
@@ -959,9 +968,12 @@ api_instance = Brevo::ContactsApi.new
 opts = {
   limit: 789, # Integer | Number of documents per page
   offset: 789, # Integer | Index of the first document of the page
-  modified_since: Time.parse('2013-10-20T19:20:30+01:00'), # Time | Filter (urlencoded) the contacts modified after a given UTC date-time (YYYY-MM-DDTHH:mm:ss.SSSZ). Prefer to pass your timezone in date-time format for accurate result.
-  created_since: Time.parse('2013-10-20T19:20:30+01:00'), # Time | Filter (urlencoded) the contacts created after a given UTC date-time (YYYY-MM-DDTHH:mm:ss.SSSZ). Prefer to pass your timezone in date-time format for accurate result.
-  sort: 'asc' # String | Sort the results in the ascending/descending order of record creation
+  modified_since: 'modified_since_example', # String | Filter (urlencoded) the contacts modified after a given UTC date-time (YYYY-MM-DDTHH:mm:ss.SSSZ). **Prefer to pass your timezone in date-time format for accurate result.** 
+  created_since: 'created_since_example', # String | Filter (urlencoded) the contacts created after a given UTC date-time (YYYY-MM-DDTHH:mm:ss.SSSZ). **Prefer to pass your timezone in date-time format for accurate result.** 
+  sort: 'asc', # String | Sort the results in the ascending/descending order of record creation. Default order is **descending** if `sort` is not passed
+  segment_id: 789, # Integer | Id of the segment. **Either listIds or segmentId can be passed.**
+  list_ids: [3.56], # Array<Integer> | Ids of the list. **Either listIds or segmentId can be passed.**
+  filter: 'filter_example' # String | Filter the contacts on the basis of attributes. **Allowed operator: equals. (e.g. filter=equals(FIRSTNAME,\"Antoine\"), filter=equals(B1, true), filter=equals(DOB, \"1989-11-23\"))** 
 }
 
 begin
@@ -997,9 +1009,12 @@ end
 | ---- | ---- | ----------- | ----- |
 | **limit** | **Integer** | Number of documents per page | [optional][default to 50] |
 | **offset** | **Integer** | Index of the first document of the page | [optional][default to 0] |
-| **modified_since** | **Time** | Filter (urlencoded) the contacts modified after a given UTC date-time (YYYY-MM-DDTHH:mm:ss.SSSZ). Prefer to pass your timezone in date-time format for accurate result. | [optional] |
-| **created_since** | **Time** | Filter (urlencoded) the contacts created after a given UTC date-time (YYYY-MM-DDTHH:mm:ss.SSSZ). Prefer to pass your timezone in date-time format for accurate result. | [optional] |
-| **sort** | **String** | Sort the results in the ascending/descending order of record creation | [optional][default to &#39;desc&#39;] |
+| **modified_since** | **String** | Filter (urlencoded) the contacts modified after a given UTC date-time (YYYY-MM-DDTHH:mm:ss.SSSZ). **Prefer to pass your timezone in date-time format for accurate result.**  | [optional] |
+| **created_since** | **String** | Filter (urlencoded) the contacts created after a given UTC date-time (YYYY-MM-DDTHH:mm:ss.SSSZ). **Prefer to pass your timezone in date-time format for accurate result.**  | [optional] |
+| **sort** | **String** | Sort the results in the ascending/descending order of record creation. Default order is **descending** if &#x60;sort&#x60; is not passed | [optional][default to &#39;desc&#39;] |
+| **segment_id** | **Integer** | Id of the segment. **Either listIds or segmentId can be passed.** | [optional] |
+| **list_ids** | [**Array&lt;Integer&gt;**](Integer.md) | Ids of the list. **Either listIds or segmentId can be passed.** | [optional] |
+| **filter** | **String** | Filter the contacts on the basis of attributes. **Allowed operator: equals. (e.g. filter&#x3D;equals(FIRSTNAME,\&quot;Antoine\&quot;), filter&#x3D;equals(B1, true), filter&#x3D;equals(DOB, \&quot;1989-11-23\&quot;))**  | [optional] |
 
 ### Return type
 
@@ -1037,10 +1052,10 @@ end
 api_instance = Brevo::ContactsApi.new
 list_id = 789 # Integer | Id of the list
 opts = {
-  modified_since: Time.parse('2013-10-20T19:20:30+01:00'), # Time | Filter (urlencoded) the contacts modified after a given UTC date-time (YYYY-MM-DDTHH:mm:ss.SSSZ). Prefer to pass your timezone in date-time format for accurate result.
+  modified_since: 'modified_since_example', # String | Filter (urlencoded) the contacts modified after a given UTC date-time (YYYY-MM-DDTHH:mm:ss.SSSZ). **Prefer to pass your timezone in date-time format for accurate result.** 
   limit: 789, # Integer | Number of documents per page
   offset: 789, # Integer | Index of the first document of the page
-  sort: 'asc' # String | Sort the results in the ascending/descending order of record creation
+  sort: 'asc' # String | Sort the results in the ascending/descending order of record creation. Default order is **descending** if `sort` is not passed
 }
 
 begin
@@ -1075,10 +1090,10 @@ end
 | Name | Type | Description | Notes |
 | ---- | ---- | ----------- | ----- |
 | **list_id** | **Integer** | Id of the list |  |
-| **modified_since** | **Time** | Filter (urlencoded) the contacts modified after a given UTC date-time (YYYY-MM-DDTHH:mm:ss.SSSZ). Prefer to pass your timezone in date-time format for accurate result. | [optional] |
+| **modified_since** | **String** | Filter (urlencoded) the contacts modified after a given UTC date-time (YYYY-MM-DDTHH:mm:ss.SSSZ). **Prefer to pass your timezone in date-time format for accurate result.**  | [optional] |
 | **limit** | **Integer** | Number of documents per page | [optional][default to 50] |
 | **offset** | **Integer** | Index of the first document of the page | [optional][default to 0] |
-| **sort** | **String** | Sort the results in the ascending/descending order of record creation | [optional][default to &#39;desc&#39;] |
+| **sort** | **String** | Sort the results in the ascending/descending order of record creation. Default order is **descending** if &#x60;sort&#x60; is not passed | [optional][default to &#39;desc&#39;] |
 
 ### Return type
 
@@ -1187,7 +1202,7 @@ folder_id = 789 # Integer | Id of the folder
 opts = {
   limit: 789, # Integer | Number of documents per page
   offset: 789, # Integer | Index of the first document of the page
-  sort: 'asc' # String | Sort the results in the ascending/descending order of record creation
+  sort: 'asc' # String | Sort the results in the ascending/descending order of record creation. Default order is **descending** if `sort` is not passed
 }
 
 begin
@@ -1224,7 +1239,7 @@ end
 | **folder_id** | **Integer** | Id of the folder |  |
 | **limit** | **Integer** | Number of documents per page | [optional][default to 10] |
 | **offset** | **Integer** | Index of the first document of the page | [optional][default to 0] |
-| **sort** | **String** | Sort the results in the ascending/descending order of record creation | [optional][default to &#39;desc&#39;] |
+| **sort** | **String** | Sort the results in the ascending/descending order of record creation. Default order is **descending** if &#x60;sort&#x60; is not passed | [optional][default to &#39;desc&#39;] |
 
 ### Return type
 
@@ -1263,7 +1278,7 @@ api_instance = Brevo::ContactsApi.new
 limit = 789 # Integer | Number of documents per page
 offset = 789 # Integer | Index of the first document of the page
 opts = {
-  sort: 'asc' # String | Sort the results in the ascending/descending order of record creation
+  sort: 'asc' # String | Sort the results in the ascending/descending order of record creation. Default order is **descending** if `sort` is not passed
 }
 
 begin
@@ -1299,7 +1314,7 @@ end
 | ---- | ---- | ----------- | ----- |
 | **limit** | **Integer** | Number of documents per page | [default to 10] |
 | **offset** | **Integer** | Index of the first document of the page | [default to 0] |
-| **sort** | **String** | Sort the results in the ascending/descending order of record creation | [optional][default to &#39;desc&#39;] |
+| **sort** | **String** | Sort the results in the ascending/descending order of record creation. Default order is **descending** if &#x60;sort&#x60; is not passed | [optional][default to &#39;desc&#39;] |
 
 ### Return type
 
@@ -1317,7 +1332,7 @@ end
 
 ## get_list
 
-> <GetExtendedList> get_list(list_id)
+> <GetExtendedList> get_list(list_id, opts)
 
 Get a list's details
 
@@ -1336,10 +1351,14 @@ end
 
 api_instance = Brevo::ContactsApi.new
 list_id = 789 # Integer | Id of the list
+opts = {
+  start_date: 'start_date_example', # String | **Mandatory if endDate is used**. Ending (urlencoded) UTC date-time (YYYY-MM-DDTHH:mm:ss.SSSZ) to aggregate the sent email campaigns for a specific list id. **Prefer to pass your timezone in date-time format for accurate result** 
+  end_date: 'end_date_example' # String | **Mandatory if startDate is used**. Ending (urlencoded) UTC date-time (YYYY-MM-DDTHH:mm:ss.SSSZ) to aggregate the sent email campaigns for a specific list id. **Prefer to pass your timezone in date-time format for accurate result** 
+}
 
 begin
   # Get a list's details
-  result = api_instance.get_list(list_id)
+  result = api_instance.get_list(list_id, opts)
   p result
 rescue Brevo::ApiError => e
   puts "Error when calling ContactsApi->get_list: #{e}"
@@ -1350,12 +1369,12 @@ end
 
 This returns an Array which contains the response data, status code and headers.
 
-> <Array(<GetExtendedList>, Integer, Hash)> get_list_with_http_info(list_id)
+> <Array(<GetExtendedList>, Integer, Hash)> get_list_with_http_info(list_id, opts)
 
 ```ruby
 begin
   # Get a list's details
-  data, status_code, headers = api_instance.get_list_with_http_info(list_id)
+  data, status_code, headers = api_instance.get_list_with_http_info(list_id, opts)
   p status_code # => 2xx
   p headers # => { ... }
   p data # => <GetExtendedList>
@@ -1369,6 +1388,8 @@ end
 | Name | Type | Description | Notes |
 | ---- | ---- | ----------- | ----- |
 | **list_id** | **Integer** | Id of the list |  |
+| **start_date** | **String** | **Mandatory if endDate is used**. Ending (urlencoded) UTC date-time (YYYY-MM-DDTHH:mm:ss.SSSZ) to aggregate the sent email campaigns for a specific list id. **Prefer to pass your timezone in date-time format for accurate result**  | [optional] |
+| **end_date** | **String** | **Mandatory if startDate is used**. Ending (urlencoded) UTC date-time (YYYY-MM-DDTHH:mm:ss.SSSZ) to aggregate the sent email campaigns for a specific list id. **Prefer to pass your timezone in date-time format for accurate result**  | [optional] |
 
 ### Return type
 
@@ -1407,7 +1428,7 @@ api_instance = Brevo::ContactsApi.new
 opts = {
   limit: 789, # Integer | Number of documents per page
   offset: 789, # Integer | Index of the first document of the page
-  sort: 'asc' # String | Sort the results in the ascending/descending order of record creation
+  sort: 'asc' # String | Sort the results in the ascending/descending order of record creation. Default order is **descending** if `sort` is not passed
 }
 
 begin
@@ -1443,7 +1464,7 @@ end
 | ---- | ---- | ----------- | ----- |
 | **limit** | **Integer** | Number of documents per page | [optional][default to 10] |
 | **offset** | **Integer** | Index of the first document of the page | [optional][default to 0] |
-| **sort** | **String** | Sort the results in the ascending/descending order of record creation | [optional][default to &#39;desc&#39;] |
+| **sort** | **String** | Sort the results in the ascending/descending order of record creation. Default order is **descending** if &#x60;sort&#x60; is not passed | [optional][default to &#39;desc&#39;] |
 
 ### Return type
 
@@ -1461,7 +1482,7 @@ end
 
 ## get_segments
 
-> <GetSegments> get_segments(limit, offset, opts)
+> <GetSegments> get_segments(opts)
 
 Get all the segments
 
@@ -1479,15 +1500,15 @@ Brevo.configure do |config|
 end
 
 api_instance = Brevo::ContactsApi.new
-limit = 789 # Integer | Number of documents per page
-offset = 789 # Integer | Index of the first document of the page
 opts = {
-  sort: 'asc' # String | Sort the results in the ascending/descending order of record creation
+  limit: 789, # Integer | Number of documents per page
+  offset: 789, # Integer | Index of the first document of the page
+  sort: 'asc' # String | Sort the results in the ascending/descending order of record creation. Default order is **descending** if `sort` is not passed
 }
 
 begin
   # Get all the segments
-  result = api_instance.get_segments(limit, offset, opts)
+  result = api_instance.get_segments(opts)
   p result
 rescue Brevo::ApiError => e
   puts "Error when calling ContactsApi->get_segments: #{e}"
@@ -1498,12 +1519,12 @@ end
 
 This returns an Array which contains the response data, status code and headers.
 
-> <Array(<GetSegments>, Integer, Hash)> get_segments_with_http_info(limit, offset, opts)
+> <Array(<GetSegments>, Integer, Hash)> get_segments_with_http_info(opts)
 
 ```ruby
 begin
   # Get all the segments
-  data, status_code, headers = api_instance.get_segments_with_http_info(limit, offset, opts)
+  data, status_code, headers = api_instance.get_segments_with_http_info(opts)
   p status_code # => 2xx
   p headers # => { ... }
   p data # => <GetSegments>
@@ -1516,9 +1537,9 @@ end
 
 | Name | Type | Description | Notes |
 | ---- | ---- | ----------- | ----- |
-| **limit** | **Integer** | Number of documents per page | [default to 10] |
-| **offset** | **Integer** | Index of the first document of the page | [default to 0] |
-| **sort** | **String** | Sort the results in the ascending/descending order of record creation | [optional][default to &#39;desc&#39;] |
+| **limit** | **Integer** | Number of documents per page | [optional][default to 10] |
+| **offset** | **Integer** | Index of the first document of the page | [optional][default to 0] |
+| **sort** | **String** | Sort the results in the ascending/descending order of record creation. Default order is **descending** if &#x60;sort&#x60; is not passed | [optional][default to &#39;desc&#39;] |
 
 ### Return type
 
@@ -1540,7 +1561,7 @@ end
 
 Import contacts
 
-It returns the background process ID which on completion calls the notify URL that you have set in the input.
+It returns the background process ID which on completion calls the notify URL that you have set in the input.  **Note**: - Any contact attribute that doesn't exist in your account will be ignored at import end. 
 
 ### Examples
 
@@ -1556,7 +1577,7 @@ Brevo.configure do |config|
 end
 
 api_instance = Brevo::ContactsApi.new
-request_contact_import = Brevo::RequestContactImport.new # RequestContactImport | Values to import contacts in Sendinblue. To know more about the expected format, please have a look at ``https://help.sendinblue.com/hc/en-us/articles/209499265-Build-contacts-lists-for-your-email-marketing-campaigns``
+request_contact_import = Brevo::RequestContactImport.new # RequestContactImport | Values to import contacts in Brevo. To know more about the expected format, please have a look at ``https://help.brevo.com/hc/en-us/articles/209499265-Build-contacts-lists-for-your-email-marketing-campaigns``
 
 begin
   # Import contacts
@@ -1589,7 +1610,7 @@ end
 
 | Name | Type | Description | Notes |
 | ---- | ---- | ----------- | ----- |
-| **request_contact_import** | [**RequestContactImport**](RequestContactImport.md) | Values to import contacts in Sendinblue. To know more about the expected format, please have a look at &#x60;&#x60;https://help.sendinblue.com/hc/en-us/articles/209499265-Build-contacts-lists-for-your-email-marketing-campaigns&#x60;&#x60; |  |
+| **request_contact_import** | [**RequestContactImport**](RequestContactImport.md) | Values to import contacts in Brevo. To know more about the expected format, please have a look at &#x60;&#x60;https://help.brevo.com/hc/en-us/articles/209499265-Build-contacts-lists-for-your-email-marketing-campaigns&#x60;&#x60; |  |
 
 ### Return type
 
@@ -1626,7 +1647,7 @@ end
 
 api_instance = Brevo::ContactsApi.new
 list_id = 789 # Integer | Id of the list
-contact_emails = Brevo::RemoveContactFromList.new # RemoveContactFromList | Emails adresses of the contact
+contact_emails = Brevo::RemoveContactFromListByAll.new # RemoveContactFromListRequest | Emails adresses OR IDs of the contacts OR 'all' true
 
 begin
   # Delete a contact from a list
@@ -1660,7 +1681,7 @@ end
 | Name | Type | Description | Notes |
 | ---- | ---- | ----------- | ----- |
 | **list_id** | **Integer** | Id of the list |  |
-| **contact_emails** | [**RemoveContactFromList**](RemoveContactFromList.md) | Emails adresses of the contact |  |
+| **contact_emails** | [**RemoveContactFromListRequest**](RemoveContactFromListRequest.md) | Emails adresses OR IDs of the contacts OR &#39;all&#39; true |  |
 
 ### Return type
 
@@ -1698,7 +1719,7 @@ Brevo.configure do |config|
 end
 
 api_instance = Brevo::ContactsApi.new
-request_contact_export = Brevo::RequestContactExport.new # RequestContactExport | Values to request a contact export
+request_contact_export = Brevo::RequestContactExport.new({custom_contact_filter: Brevo::RequestContactExportCustomContactFilter.new}) # RequestContactExport | Values to request a contact export
 
 begin
   # Export contacts
@@ -1819,9 +1840,77 @@ nil (empty response body)
 - **Accept**: application/json
 
 
+## update_batch_contacts
+
+> update_batch_contacts(update_batch_contacts)
+
+Update multiple contacts
+
+### Examples
+
+```ruby
+require 'time'
+require 'brevo'
+# setup authorization
+Brevo.configure do |config|
+  # Configure API key authorization: api-key
+  config.api_key['api-key'] = 'YOUR API KEY'
+  # Uncomment the following line to set a prefix for the API key, e.g. 'Bearer' (defaults to nil)
+  # config.api_key_prefix['api-key'] = 'Bearer'
+end
+
+api_instance = Brevo::ContactsApi.new
+update_batch_contacts = Brevo::UpdateBatchContacts.new # UpdateBatchContacts | Values to update multiple contacts
+
+begin
+  # Update multiple contacts
+  api_instance.update_batch_contacts(update_batch_contacts)
+rescue Brevo::ApiError => e
+  puts "Error when calling ContactsApi->update_batch_contacts: #{e}"
+end
+```
+
+#### Using the update_batch_contacts_with_http_info variant
+
+This returns an Array which contains the response data (`nil` in this case), status code and headers.
+
+> <Array(nil, Integer, Hash)> update_batch_contacts_with_http_info(update_batch_contacts)
+
+```ruby
+begin
+  # Update multiple contacts
+  data, status_code, headers = api_instance.update_batch_contacts_with_http_info(update_batch_contacts)
+  p status_code # => 2xx
+  p headers # => { ... }
+  p data # => nil
+rescue Brevo::ApiError => e
+  puts "Error when calling ContactsApi->update_batch_contacts_with_http_info: #{e}"
+end
+```
+
+### Parameters
+
+| Name | Type | Description | Notes |
+| ---- | ---- | ----------- | ----- |
+| **update_batch_contacts** | [**UpdateBatchContacts**](UpdateBatchContacts.md) | Values to update multiple contacts |  |
+
+### Return type
+
+nil (empty response body)
+
+### Authorization
+
+[api-key](../README.md#api-key)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+
 ## update_contact
 
-> update_contact(email, update_contact)
+> update_contact(identifier, update_contact)
 
 Update a contact
 
@@ -1839,12 +1928,12 @@ Brevo.configure do |config|
 end
 
 api_instance = Brevo::ContactsApi.new
-email = 'email_example' # String | Email (urlencoded) of the contact
+identifier = nil # GetContactInfoIdentifierParameter | Email (urlencoded) OR ID of the contact
 update_contact = Brevo::UpdateContact.new # UpdateContact | Values to update a contact
 
 begin
   # Update a contact
-  api_instance.update_contact(email, update_contact)
+  api_instance.update_contact(identifier, update_contact)
 rescue Brevo::ApiError => e
   puts "Error when calling ContactsApi->update_contact: #{e}"
 end
@@ -1854,12 +1943,12 @@ end
 
 This returns an Array which contains the response data (`nil` in this case), status code and headers.
 
-> <Array(nil, Integer, Hash)> update_contact_with_http_info(email, update_contact)
+> <Array(nil, Integer, Hash)> update_contact_with_http_info(identifier, update_contact)
 
 ```ruby
 begin
   # Update a contact
-  data, status_code, headers = api_instance.update_contact_with_http_info(email, update_contact)
+  data, status_code, headers = api_instance.update_contact_with_http_info(identifier, update_contact)
   p status_code # => 2xx
   p headers # => { ... }
   p data # => nil
@@ -1872,7 +1961,7 @@ end
 
 | Name | Type | Description | Notes |
 | ---- | ---- | ----------- | ----- |
-| **email** | **String** | Email (urlencoded) of the contact |  |
+| **identifier** | [**GetContactInfoIdentifierParameter**](.md) | Email (urlencoded) OR ID of the contact |  |
 | **update_contact** | [**UpdateContact**](UpdateContact.md) | Values to update a contact |  |
 
 ### Return type

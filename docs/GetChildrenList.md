@@ -5,7 +5,7 @@
 | Name | Type | Description | Notes |
 | ---- | ---- | ----------- | ----- |
 | **children** | [**Array&lt;GetChildrenListChildrenInner&gt;**](GetChildrenListChildrenInner.md) | Your children&#39;s account information | [optional] |
-| **count** | **Integer** | Number of child accounts |  |
+| **count** | **Integer** | Number of child accounts | [optional] |
 
 ## Example
 

@@ -15,7 +15,7 @@ require 'brevo'
 
 instance = Brevo::AbTestVersionClicksInner.new(
   link: https://facbook.com/versionA,
-  clicks_count: 3,
+  clicks_count: null,
   click_rate: 40%
 )
 ```

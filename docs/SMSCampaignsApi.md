@@ -1,6 +1,6 @@
 # Brevo::SMSCampaignsApi
 
-All URIs are relative to *https://api.sendinblue.com/v3*
+All URIs are relative to *https://api.brevo.com/v3*
 
 | Method | HTTP request | Description |
 | ------ | ------------ | ----------- |
@@ -36,7 +36,7 @@ Brevo.configure do |config|
 end
 
 api_instance = Brevo::SMSCampaignsApi.new
-create_sms_campaign = Brevo::CreateSmsCampaign.new({name: 'Spring Promo Code', sender: 'MyShop', content: 'Get a discount by visiting our NY store and saying : Happy Spring !'}) # CreateSmsCampaign | Values to create an SMS Campaign
+create_sms_campaign = Brevo::CreateSmsCampaign.new({name: 'Spring Promo Code', sender: 'MyShop', content: 'Get a discount by visiting our NY store and saying : Happy Spring!'}) # CreateSmsCampaign | Values to create an SMS Campaign
 
 begin
   # Creates an SMS campaign
@@ -244,10 +244,11 @@ end
 api_instance = Brevo::SMSCampaignsApi.new
 opts = {
   status: 'suspended', # String | Status of campaign.
-  start_date: Time.parse('2013-10-20T19:20:30+01:00'), # Time | Mandatory if endDate is used. Starting (urlencoded) UTC date-time (YYYY-MM-DDTHH:mm:ss.SSSZ) to filter the sent sms campaigns. Prefer to pass your timezone in date-time format for accurate result ( only available if either 'status' not passed and if passed is set to 'sent' )
-  end_date: Time.parse('2013-10-20T19:20:30+01:00'), # Time | Mandatory if startDate is used. Ending (urlencoded) UTC date-time (YYYY-MM-DDTHH:mm:ss.SSSZ) to filter the sent sms campaigns. Prefer to pass your timezone in date-time format for accurate result ( only available if either 'status' not passed and if passed is set to 'sent' )
+  start_date: 'start_date_example', # String | **Mandatory if endDate is used.** Starting (urlencoded) UTC date-time (YYYY-MM-DDTHH:mm:ss.SSSZ) to filter the sent sms campaigns. **Prefer to pass your timezone in date-time format for accurate result** ( only available if either 'status' not passed and if passed is set to 'sent' ) 
+  end_date: 'end_date_example', # String | **Mandatory if startDate is used.** Ending (urlencoded) UTC date-time (YYYY-MM-DDTHH:mm:ss.SSSZ) to filter the sent sms campaigns. **Prefer to pass your timezone in date-time format for accurate result** ( only available if either 'status' not passed and if passed is set to 'sent' ) 
   limit: 789, # Integer | Number limitation for the result returned
-  offset: 789 # Integer | Beginning point in the list to retrieve from.
+  offset: 789, # Integer | Beginning point in the list to retrieve from.
+  sort: 'asc' # String | Sort the results in the ascending/descending order of record creation. Default order is **descending** if `sort` is not passed
 }
 
 begin
@@ -282,10 +283,11 @@ end
 | Name | Type | Description | Notes |
 | ---- | ---- | ----------- | ----- |
 | **status** | **String** | Status of campaign. | [optional] |
-| **start_date** | **Time** | Mandatory if endDate is used. Starting (urlencoded) UTC date-time (YYYY-MM-DDTHH:mm:ss.SSSZ) to filter the sent sms campaigns. Prefer to pass your timezone in date-time format for accurate result ( only available if either &#39;status&#39; not passed and if passed is set to &#39;sent&#39; ) | [optional] |
-| **end_date** | **Time** | Mandatory if startDate is used. Ending (urlencoded) UTC date-time (YYYY-MM-DDTHH:mm:ss.SSSZ) to filter the sent sms campaigns. Prefer to pass your timezone in date-time format for accurate result ( only available if either &#39;status&#39; not passed and if passed is set to &#39;sent&#39; ) | [optional] |
+| **start_date** | **String** | **Mandatory if endDate is used.** Starting (urlencoded) UTC date-time (YYYY-MM-DDTHH:mm:ss.SSSZ) to filter the sent sms campaigns. **Prefer to pass your timezone in date-time format for accurate result** ( only available if either &#39;status&#39; not passed and if passed is set to &#39;sent&#39; )  | [optional] |
+| **end_date** | **String** | **Mandatory if startDate is used.** Ending (urlencoded) UTC date-time (YYYY-MM-DDTHH:mm:ss.SSSZ) to filter the sent sms campaigns. **Prefer to pass your timezone in date-time format for accurate result** ( only available if either &#39;status&#39; not passed and if passed is set to &#39;sent&#39; )  | [optional] |
 | **limit** | **Integer** | Number limitation for the result returned | [optional][default to 500] |
 | **offset** | **Integer** | Beginning point in the list to retrieve from. | [optional][default to 0] |
+| **sort** | **String** | Sort the results in the ascending/descending order of record creation. Default order is **descending** if &#x60;sort&#x60; is not passed | [optional][default to &#39;desc&#39;] |
 
 ### Return type
 
@@ -518,7 +520,7 @@ nil (empty response body)
 
 ## send_test_sms
 
-> send_test_sms(campaign_id, phone_number)
+> send_test_sms(campaign_id, send_test_sms)
 
 Send a test SMS campaign
 
@@ -537,11 +539,11 @@ end
 
 api_instance = Brevo::SMSCampaignsApi.new
 campaign_id = 789 # Integer | Id of the SMS campaign
-phone_number = Brevo::SendTestSms.new # SendTestSms | Mobile number of the recipient with the country code. This number must belong to one of your contacts in SendinBlue account and must not be blacklisted
+send_test_sms = Brevo::SendTestSms.new # SendTestSms | Mobile number of the recipient with the country code. This number **must belong to one of your contacts in Brevo account and must not be blacklisted** 
 
 begin
   # Send a test SMS campaign
-  api_instance.send_test_sms(campaign_id, phone_number)
+  api_instance.send_test_sms(campaign_id, send_test_sms)
 rescue Brevo::ApiError => e
   puts "Error when calling SMSCampaignsApi->send_test_sms: #{e}"
 end
@@ -551,12 +553,12 @@ end
 
 This returns an Array which contains the response data (`nil` in this case), status code and headers.
 
-> <Array(nil, Integer, Hash)> send_test_sms_with_http_info(campaign_id, phone_number)
+> <Array(nil, Integer, Hash)> send_test_sms_with_http_info(campaign_id, send_test_sms)
 
 ```ruby
 begin
   # Send a test SMS campaign
-  data, status_code, headers = api_instance.send_test_sms_with_http_info(campaign_id, phone_number)
+  data, status_code, headers = api_instance.send_test_sms_with_http_info(campaign_id, send_test_sms)
   p status_code # => 2xx
   p headers # => { ... }
   p data # => nil
@@ -570,7 +572,7 @@ end
 | Name | Type | Description | Notes |
 | ---- | ---- | ----------- | ----- |
 | **campaign_id** | **Integer** | Id of the SMS campaign |  |
-| **phone_number** | [**SendTestSms**](SendTestSms.md) | Mobile number of the recipient with the country code. This number must belong to one of your contacts in SendinBlue account and must not be blacklisted |  |
+| **send_test_sms** | [**SendTestSms**](SendTestSms.md) | Mobile number of the recipient with the country code. This number **must belong to one of your contacts in Brevo account and must not be blacklisted**  |  |
 
 ### Return type
 

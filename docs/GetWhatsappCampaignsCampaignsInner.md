@@ -9,12 +9,12 @@
 | **template_id** | **String** | Id of the WhatsApp template |  |
 | **campaign_status** | **String** | Status of the WhatsApp Campaign |  |
 | **scheduled_at** | **String** | UTC date-time on which WhatsApp campaign is scheduled. Should be in YYYY-MM-DDTHH:mm:ss.SSSZ format |  |
-| **error_reason** | **String** | Error reason in the campaign creation | [optional] |
+| **error_reason** | **String** | Error Reason associated with the WhatsApp campaign sending | [optional] |
 | **invalidated_contacts** | **Integer** | Count of invalidated contacts | [optional] |
 | **read_percentage** | **Float** | Read percentage of the the WhatsApp campaign created | [optional] |
 | **stats** | [**WhatsappCampStats**](WhatsappCampStats.md) |  | [optional] |
-| **created_at** | **String** | Creation UTC date-time of the WhatsApp campaign (YYYY-MM-DDTHH:mm:ss.SSSZ) |  |
-| **modified_at** | **String** | UTC date-time of last modification of the whatsApp template (YYYY-MM-DDTHH:mm:ss.SSSZ) |  |
+| **created_at** | **String** | Creation UTC date-time of the WhatsApp template (YYYY-MM-DDTHH:mm:ss.SSSZ) |  |
+| **modified_at** | **String** | UTC date-time of last modification of the WhatsApp template (YYYY-MM-DDTHH:mm:ss.SSSZ) |  |
 
 ## Example
 
@@ -27,7 +27,7 @@ instance = Brevo::GetWhatsappCampaignsCampaignsInner.new(
   template_id: 637660278078655,
   campaign_status: draft,
   scheduled_at: 2017-06-01T12:30:00Z,
-  error_reason: NONE,
+  error_reason: null,
   invalidated_contacts: 0,
   read_percentage: 28.57,
   stats: null,

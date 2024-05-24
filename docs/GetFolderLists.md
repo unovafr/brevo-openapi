@@ -4,8 +4,8 @@
 
 | Name | Type | Description | Notes |
 | ---- | ---- | ----------- | ----- |
-| **lists** | [**Array&lt;GetList&gt;**](GetList.md) |  |  |
-| **count** | **Integer** | Number of lists in the folder |  |
+| **lists** | [**Array&lt;GetList&gt;**](GetList.md) |  | [optional] |
+| **count** | **Integer** | Number of lists in the folder | [optional] |
 
 ## Example
 

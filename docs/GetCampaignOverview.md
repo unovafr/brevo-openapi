@@ -7,9 +7,10 @@
 | **id** | **Integer** | ID of the campaign |  |
 | **name** | **String** | Name of the campaign |  |
 | **subject** | **String** | Subject of the campaign. Only available if &#x60;abTesting&#x60; flag of the campaign is &#x60;false&#x60; | [optional] |
+| **preview_text** | **String** | Preview text or preheader of the email campaign | [optional] |
 | **type** | **String** | Type of campaign |  |
 | **status** | **String** | Status of the campaign |  |
-| **scheduled_at** | **Time** | UTC date-time on which campaign is scheduled (YYYY-MM-DDTHH:mm:ss.SSSZ) | [optional] |
+| **scheduled_at** | **String** | UTC date-time on which campaign is scheduled (YYYY-MM-DDTHH:mm:ss.SSSZ) | [optional] |
 | **ab_testing** | **Boolean** | Status of A/B Test for the campaign. abTesting &#x3D; false means it is disabled, &amp; abTesting &#x3D; true means it is enabled. | [optional] |
 | **subject_a** | **String** | Subject A of the ab-test campaign. Only available if &#x60;abTesting&#x60; flag of the campaign is &#x60;true&#x60; | [optional] |
 | **subject_b** | **String** | Subject B of the ab-test campaign. Only available if &#x60;abTesting&#x60; flag of the campaign is &#x60;true&#x60; | [optional] |
@@ -27,9 +28,10 @@ instance = Brevo::GetCampaignOverview.new(
   id: 12,
   name: EN - Sales Summer 2017,
   subject: 20% OFF for 2017 Summer Sales,
+  preview_text: Thanks for your order!,
   type: classic,
   status: sent,
-  scheduled_at: 2017-06-01T12:30Z,
+  scheduled_at: 2017-06-01T12:30:00Z,
   ab_testing: true,
   subject_a: Discover the New Collection!,
   subject_b: Want to discover the New Collection?,

@@ -6,7 +6,7 @@
 | ---- | ---- | ----------- | ----- |
 | **name** | **String** | From Name to update the sender | [optional] |
 | **email** | **String** | From Email to update the sender | [optional] |
-| **ips** | [**Array&lt;CreateSenderIpsInner&gt;**](CreateSenderIpsInner.md) | Only in case of dedicated IP, IPs to associate to the sender. If passed, will replace all the existing IPs. | [optional] |
+| **ips** | [**Array&lt;CreateSenderIpsInner&gt;**](CreateSenderIpsInner.md) | **Only in case of dedicated IP**. IPs to associate to the sender. If passed, will replace all the existing IPs.  | [optional] |
 
 ## Example
 

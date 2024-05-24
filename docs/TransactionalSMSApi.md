@@ -1,6 +1,6 @@
 # Brevo::TransactionalSMSApi
 
-All URIs are relative to *https://api.sendinblue.com/v3*
+All URIs are relative to *https://api.brevo.com/v3*
 
 | Method | HTTP request | Description |
 | ------ | ------------ | ----------- |
@@ -32,14 +32,14 @@ end
 api_instance = Brevo::TransactionalSMSApi.new
 opts = {
   limit: 789, # Integer | Number of documents per page
-  start_date: 'start_date_example', # String | Mandatory if endDate is used. Starting date (YYYY-MM-DD) of the report
-  end_date: 'end_date_example', # String | Mandatory if startDate is used. Ending date (YYYY-MM-DD) of the report
+  start_date: 'start_date_example', # String | **Mandatory if endDate is used.** Starting date (YYYY-MM-DD) of the report 
+  end_date: 'end_date_example', # String | **Mandatory if startDate is used.** Ending date (YYYY-MM-DD) of the report 
   offset: 789, # Integer | Index of the first document of the page
-  days: 56, # Integer | Number of days in the past including today (positive integer). Not compatible with 'startDate' and 'endDate'
+  days: 789, # Integer | Number of days in the past including today (positive integer). **Not compatible with 'startDate' and 'endDate'** 
   phone_number: 'phone_number_example', # String | Filter the report for a specific phone number
   event: 'bounces', # String | Filter the report for specific events
   tags: 'tags_example', # String | Filter the report for specific tags passed as a serialized urlencoded array
-  sort: 'asc' # String | Sort the results in the ascending/descending order of record creation
+  sort: 'asc' # String | Sort the results in the ascending/descending order of record creation. Default order is **descending** if `sort` is not passed
 }
 
 begin
@@ -74,14 +74,14 @@ end
 | Name | Type | Description | Notes |
 | ---- | ---- | ----------- | ----- |
 | **limit** | **Integer** | Number of documents per page | [optional][default to 50] |
-| **start_date** | **String** | Mandatory if endDate is used. Starting date (YYYY-MM-DD) of the report | [optional] |
-| **end_date** | **String** | Mandatory if startDate is used. Ending date (YYYY-MM-DD) of the report | [optional] |
+| **start_date** | **String** | **Mandatory if endDate is used.** Starting date (YYYY-MM-DD) of the report  | [optional] |
+| **end_date** | **String** | **Mandatory if startDate is used.** Ending date (YYYY-MM-DD) of the report  | [optional] |
 | **offset** | **Integer** | Index of the first document of the page | [optional][default to 0] |
-| **days** | **Integer** | Number of days in the past including today (positive integer). Not compatible with &#39;startDate&#39; and &#39;endDate&#39; | [optional] |
+| **days** | **Integer** | Number of days in the past including today (positive integer). **Not compatible with &#39;startDate&#39; and &#39;endDate&#39;**  | [optional] |
 | **phone_number** | **String** | Filter the report for a specific phone number | [optional] |
 | **event** | **String** | Filter the report for specific events | [optional] |
 | **tags** | **String** | Filter the report for specific tags passed as a serialized urlencoded array | [optional] |
-| **sort** | **String** | Sort the results in the ascending/descending order of record creation | [optional][default to &#39;desc&#39;] |
+| **sort** | **String** | Sort the results in the ascending/descending order of record creation. Default order is **descending** if &#x60;sort&#x60; is not passed | [optional][default to &#39;desc&#39;] |
 
 ### Return type
 
@@ -118,9 +118,9 @@ end
 
 api_instance = Brevo::TransactionalSMSApi.new
 opts = {
-  start_date: 'start_date_example', # String | Mandatory if endDate is used. Starting date (YYYY-MM-DD) of the report
-  end_date: 'end_date_example', # String | Mandatory if startDate is used. Ending date (YYYY-MM-DD) of the report
-  days: 56, # Integer | Number of days in the past including today (positive integer). Not compatible with startDate and endDate
+  start_date: 'start_date_example', # String | **Mandatory if endDate is used.** Starting date (YYYY-MM-DD) of the report 
+  end_date: 'end_date_example', # String | **Mandatory if startDate is used.** Ending date (YYYY-MM-DD) of the report 
+  days: 789, # Integer | Number of days in the past including today (positive integer). **Not compatible with startDate and endDate** 
   tag: 'tag_example' # String | Filter on a tag
 }
 
@@ -155,9 +155,9 @@ end
 
 | Name | Type | Description | Notes |
 | ---- | ---- | ----------- | ----- |
-| **start_date** | **String** | Mandatory if endDate is used. Starting date (YYYY-MM-DD) of the report | [optional] |
-| **end_date** | **String** | Mandatory if startDate is used. Ending date (YYYY-MM-DD) of the report | [optional] |
-| **days** | **Integer** | Number of days in the past including today (positive integer). Not compatible with startDate and endDate | [optional] |
+| **start_date** | **String** | **Mandatory if endDate is used.** Starting date (YYYY-MM-DD) of the report  | [optional] |
+| **end_date** | **String** | **Mandatory if startDate is used.** Ending date (YYYY-MM-DD) of the report  | [optional] |
+| **days** | **Integer** | Number of days in the past including today (positive integer). **Not compatible with startDate and endDate**  | [optional] |
 | **tag** | **String** | Filter on a tag | [optional] |
 
 ### Return type
@@ -195,11 +195,11 @@ end
 
 api_instance = Brevo::TransactionalSMSApi.new
 opts = {
-  start_date: 'start_date_example', # String | Mandatory if endDate is used. Starting date (YYYY-MM-DD) of the report
-  end_date: 'end_date_example', # String | Mandatory if startDate is used. Ending date (YYYY-MM-DD) of the report
-  days: 56, # Integer | Number of days in the past including today (positive integer). Not compatible with 'startDate' and 'endDate'
+  start_date: 'start_date_example', # String | **Mandatory if endDate is used.** Starting date (YYYY-MM-DD) of the report 
+  end_date: 'end_date_example', # String | **Mandatory if startDate is used.** Ending date (YYYY-MM-DD) of the report 
+  days: 789, # Integer | Number of days in the past including today (positive integer). **Not compatible with 'startDate' and 'endDate'** 
   tag: 'tag_example', # String | Filter on a tag
-  sort: 'asc' # String | Sort the results in the ascending/descending order of record creation
+  sort: 'asc' # String | Sort the results in the ascending/descending order of record creation. Default order is **descending** if `sort` is not passed
 }
 
 begin
@@ -233,11 +233,11 @@ end
 
 | Name | Type | Description | Notes |
 | ---- | ---- | ----------- | ----- |
-| **start_date** | **String** | Mandatory if endDate is used. Starting date (YYYY-MM-DD) of the report | [optional] |
-| **end_date** | **String** | Mandatory if startDate is used. Ending date (YYYY-MM-DD) of the report | [optional] |
-| **days** | **Integer** | Number of days in the past including today (positive integer). Not compatible with &#39;startDate&#39; and &#39;endDate&#39; | [optional] |
+| **start_date** | **String** | **Mandatory if endDate is used.** Starting date (YYYY-MM-DD) of the report  | [optional] |
+| **end_date** | **String** | **Mandatory if startDate is used.** Ending date (YYYY-MM-DD) of the report  | [optional] |
+| **days** | **Integer** | Number of days in the past including today (positive integer). **Not compatible with &#39;startDate&#39; and &#39;endDate&#39;**  | [optional] |
 | **tag** | **String** | Filter on a tag | [optional] |
-| **sort** | **String** | Sort the results in the ascending/descending order of record creation | [optional][default to &#39;desc&#39;] |
+| **sort** | **String** | Sort the results in the ascending/descending order of record creation. Default order is **descending** if &#x60;sort&#x60; is not passed | [optional][default to &#39;desc&#39;] |
 
 ### Return type
 
